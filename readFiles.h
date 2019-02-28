@@ -34,4 +34,13 @@ extern TCrew *readTitleCrewFile(TCrew *crew);
 extern TRating *readTitleRatingFile(TRating *rating);
 extern NBasic *readNameBasicsFile(NBasic *nameBasics);
 
+//Storing the data
+extern void storeAltTitles(TAlt *altTitle);
+extern void storeTitleBasics(TBasic *titleBasics);
+extern void storeTitleExecs(TExecs *execs);
+extern void storeTitleEpisode(TEpisode *episode);
+extern void storeTitleCrew(TCrew *crew);
+extern void storeTitleRating(TRating *rating);
+extern void storeNameBasics(NBasic *nameBasics);
+
 

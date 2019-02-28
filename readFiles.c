@@ -267,6 +267,8 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
 			break;
 		}
 
+		storeAltTitles(altTitle);
+
 	}
 
 	fclose(fptr);
@@ -275,29 +277,24 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
 
 TBasic *readTitleBasicsFile(TBasic *titleBasics)
 {
-	printf("at the beginning of the function\n");
 	char *line = malloc(sizeof(char *));
 	char *tab = "\t";
 	int lineSize = 1024;
 
 	FILE *fptr;
 
-	fptr = fopen("title.basics.tsv", "r");
 	if(fptr == NULL)
 	{
 		perror("Error: ");
 	}
-	printf("opened the file\n");
 	fgets(line, lineSize, fptr);
-	printf("got the first line\n");
 	//printf("line:%s\n", line);
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
-		//printf("size: %d\n", titleBasics->size);
-		//    printf("line:%s\n", line);
+		//printf("line:%s\n", line);
 		for(int i = 0; i<9; i++)
 		{
-		//	printf("i = %d\n", i);
+			//printf("i = %d\n", i);
 			char *token = strtok(line, tab);
 			if(token == NULL)
 			{
@@ -347,8 +344,9 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
 					}
 				}*/
 			}
-
+			
 		}
+
 		titleBasics->size++;
 
 		if(feof(fptr))
@@ -356,26 +354,33 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
 			break;
 		}
 
+		storeTitleBasics(titleBasics);
+
 	}
 
 	fclose(fptr);
 	return titleBasics;
 }
 
+void storeAltTitles(TAlt* altTitles)
+{
+
+}
+
+void storeTitleBasics(TBasic* titleBasics)
+{
+
+}
+
 int main()
 {
-	printf("here 1\n");
 	TAlt *alt = newAltTitle();
-	printf("here 2\n");
 	TBasic *tBasic = newTitleBasics();
-	printf("here 3\n");
 	alt = readAltTitlesFile(alt);
-	printf("here 4\n");
 	tBasic = readTitleBasicsFile(tBasic);
-	printf("here 5\n");
+	
+	
 	printf("%s\n",alt->titleID);
-
-
 	printf("Size: %d\n", alt->size);
 	return 0;
 }
