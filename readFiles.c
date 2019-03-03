@@ -282,7 +282,7 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
 	int lineSize = 1024;
 
 	FILE *fptr;
-
+    fptr = fopen("title.basics.tsv", "r");
 	if(fptr == NULL)
 	{
 		perror("Error: ");
@@ -335,16 +335,16 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
 			if(i == 8)
 			{
 				/*for(int j = 0; j < 3; j++)
-				{
+					{
 					char* subtoken = strtok(token, ",");
 					printf("%s\n", subtoken);
 					while(subtoken != NULL)
 					{
-						titleBasics->genres[i] = subtoken;
+					titleBasics->genres[i] = subtoken;
 					}
-				}*/
+					}*/
 			}
-			
+
 		}
 
 		titleBasics->size++;
@@ -362,12 +362,317 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
 	return titleBasics;
 }
 
-void storeAltTitles(TAlt* altTitles)
+TExecs *readTitleExecsFile(TExecs *execs)
+{
+
+	char *line = malloc(sizeof(char *));
+	char *tab = "\t";
+	int lineSize = 1024;
+
+	FILE *fptr;
+
+	fptr = fopen("title.crew.tsv", "r");
+	if(fptr == NULL)
+	{
+		perror("Error: ");
+	}
+	fgets(line, lineSize, fptr);
+	//printf("line:%s\n", line);
+	while (fgets(line, lineSize, fptr) != NULL)
+	{
+
+		//    printf("line:%s\n", line);
+		for(int i = 0; i<3; i++)
+		{
+
+			char *token = strtok(line, tab);
+			if(i == 0)
+			{
+				execs->titleID = token;
+			}
+			if(i == 1)
+			{
+				//assign directors to execs->directors
+			}
+			if(i == 2)
+			{
+				//assign writers to execs->writers
+			}
+		}
+		execs->size++;
+
+		if(feof(fptr))
+		{
+			break;
+		}
+
+		storeTitleExecs(execs);
+	}
+
+	fclose(fptr);
+	return execs;
+}
+
+TEpisode *readTitleEpisodeFile(TEpisode *episode)
+{
+	char *line = malloc(sizeof(char *));
+	char *tab = "\t";
+	int lineSize = 1024;
+
+	FILE *fptr;
+
+	fptr = fopen("title.episode.tsv", "r");
+	if(fptr == NULL)
+	{
+		perror("Error: ");
+	}
+	fgets(line, lineSize, fptr);
+	//printf("line:%s\n", line);
+	while (fgets(line, lineSize, fptr) != NULL)
+	{
+
+		//    printf("line:%s\n", line);
+		for(int i = 0; i<4; i++)
+		{
+
+			char *token = strtok(line, tab);
+			if(i == 0)
+			{
+				episode->episodeID = token;
+			}
+			if(i == 1)
+			{
+				episode->titleID = token;
+			}
+			if(i == 2)
+			{
+				episode->seasonNumber = atoi(token);
+			}
+			if(i == 3)
+			{
+				episode->episodeNumber = atoi(token);
+			}
+		}
+		episode->size++;
+
+		if(feof(fptr))
+		{
+			break;
+		}
+
+		storeTitleEpisode(episode);
+	}
+
+	fclose(fptr);
+	return episode;
+}
+
+TCrew *readTitleCrewFile(TCrew *crew)
+{
+	char *line = malloc(sizeof(char *));
+	char *tab = "\t";
+	int lineSize = 1024;
+
+	FILE *fptr;
+
+	fptr = fopen("title.principals.tsv", "r");
+	if(fptr == NULL)
+	{
+		perror("Error: ");
+	}
+	fgets(line, lineSize, fptr);
+	//printf("line:%s\n", line);
+	while (fgets(line, lineSize, fptr) != NULL)
+	{
+
+		//    printf("line:%s\n", line);
+		for(int i = 0; i<6; i++)
+		{
+
+			char *token = strtok(line, tab);
+			if(i == 0)
+			{
+				crew->titleID = token;
+			}
+			if(i == 1)
+			{
+				crew->ordering = atoi(token);
+			}
+			if(i == 2)
+			{
+				crew->nameID = token;
+			}
+			if(i == 3)
+			{
+				crew->category = token;
+			}
+			if(i == 4)
+			{
+				crew->job = token;
+			}
+			if(i == 5)
+			{
+				crew->characterName = token;
+			}
+		}
+		crew->size++;
+
+		if(feof(fptr))
+		{
+			break;
+		}
+
+		storeTitleCrew(crew);
+	}
+
+	fclose(fptr);
+	return crew;
+}
+
+TRating *readTitleRatingFile(TRating *rating)
+{
+    
+    char *line = malloc(sizeof(char *));
+    char *tab = "\t";
+    int lineSize = 1024;
+    
+    FILE *fptr;
+    
+    fptr = fopen("title.ratings.tsv", "r");
+    if(fptr == NULL)
+    {
+        perror("Error: ");
+    }
+    fgets(line, lineSize, fptr);
+    //printf("line:%s\n", line);
+    while (fgets(line, lineSize, fptr) != NULL)
+    {
+        
+        //    printf("line:%s\n", line);
+        for(int i = 0; i<3; i++)
+        {
+            
+            char *token = strtok(line, tab);
+            if(i == 0)
+            {
+                rating->titleID = token;
+            }
+            if(i == 1)
+            {
+                rating->avgRating = atof(token);
+            }
+            if(i == 2)
+            {
+                rating->numVotes = atoi(token);
+            }
+        }
+        rating->size++;
+        
+        if(feof(fptr))
+        {
+            break;
+        }
+        
+        storeTitleRating(rating);
+    }
+    
+    fclose(fptr);
+    return rating;
+}
+
+NBasic *readNameBasicsFile(NBasic *nameBasics)
+{
+    char *line = malloc(sizeof(char *));
+    char *tab = "\t";
+    int lineSize = 1024;
+    
+    FILE *fptr;
+    
+    fptr = fopen("title.principals.tsv", "r");
+    if(fptr == NULL)
+    {
+        perror("Error: ");
+    }
+    fgets(line, lineSize, fptr);
+    //printf("line:%s\n", line);
+    while (fgets(line, lineSize, fptr) != NULL)
+    {
+        
+        //    printf("line:%s\n", line);
+        for(int i = 0; i<6; i++)
+        {
+            
+            char *token = strtok(line, tab);
+            if(i == 0)
+            {
+                nameBasics->nameID = token;
+            }
+            if(i == 1)
+            {
+                nameBasics->primaryName = token;
+            }
+            if(i == 2)
+            {
+                nameBasics->birthYear = token;
+            }
+            if(i == 3)
+            {
+                nameBasics->deathYear = token;
+            }
+            if(i == 4)
+            {
+                //assign pramary profession to nameBasics->primeProfession
+            }
+            if(i == 5)
+            {
+                //assign known for titles to nameBasics->knownForTitles
+            }
+        }
+        nameBasics->size++;
+        
+        if(feof(fptr))
+        {
+            break;
+        }
+        
+        storeNameBasics(nameBasics);
+    }
+    
+    fclose(fptr);
+    return nameBasics;
+}
+
+void storeAltTitles(TAlt *altTitles)
 {
 
 }
 
-void storeTitleBasics(TBasic* titleBasics)
+void storeTitleBasics(TBasic *titleBasics)
+{
+
+}
+
+void storeTitleExecs(TExecs *execs)
+{
+
+}
+
+void storeTitleEpisode(TEpisode *episode)
+{
+
+}
+
+void storeTitleCrew(TCrew *crew)
+{
+
+}
+
+void storeTitleRating(TRating *rating)
+{
+
+}
+
+void storeNameBasics(NBasic *nameBasics)
 {
 
 }
@@ -376,12 +681,31 @@ int main()
 {
 	TAlt *alt = newAltTitle();
 	TBasic *tBasic = newTitleBasics();
+	TExecs *execs = newTitleExecs();
+	TEpisode *episode = newTitleEpisode();
+	TCrew *crew = newTitleCrew();
+    TRating *rating = newTitleRating();
+    NBasic *nameBasics = newNameBasics();
+
 	alt = readAltTitlesFile(alt);
 	tBasic = readTitleBasicsFile(tBasic);
+	execs = readTitleExecsFile(execs);
+	episode = readTitleEpisodeFile(episode);
+	crew = readTitleCrewFile(crew);
+    rating = readTitleRatingFile(rating);
+    nameBasics = readNameBasicsFile(nameBasics);
 	
-	
-	printf("%s\n",alt->titleID);
-	printf("Size: %d\n", alt->size);
+
+	printf("Alt Size: %d\n", alt->size);
+    printf("TBasic Size: %d\n", tBasic->size);
+    printf("Exec Size: %d\n", execs->size);
+    printf("Episode Size: %d\n", episode->size);
+    printf("Crew Size: %d\n", crew->size);
+    printf("Rating Size: %d\n", rating->size);
+    printf("NBasic Size: %d\n", nameBasics->size);
+    
+    long sum = alt->size + tBasic->size + execs->size + episode->size + crew->size + rating->size + nameBasics->size;
+    printf("Total Size: %lu\n", sum);
 	return 0;
 }
 
