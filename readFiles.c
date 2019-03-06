@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <string.h>
 #include "readFiles.h"
+#include "storeData.h"
 
 //contains information for alternative (AKA) titles (all the different languages)
 struct title_alternative
