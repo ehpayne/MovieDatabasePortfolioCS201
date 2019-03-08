@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <ctype.h>
 #include "readFiles.h"
 #include "storeData.h"
 
@@ -91,6 +92,8 @@ struct name_basics
 	char **knownForTitles;		     //array of titleIDs
 	int size;											 //number of rows in the file
 };
+
+
 
 //Constructor for TAlt structure
 TAlt * newAltTitle()
@@ -680,7 +683,92 @@ void storeNameBasics(NBasic *nameBasics)
 
 int main()
 {
-	TAlt *alt = newAltTitle();
+    char input;
+    printf("Would you like to: \n A. Create \n B. Retrieve \n C. Update \n D. Delete\n" );
+    scanf("%c",&input);
+    input = tolower(input);
+    if(input == 'a')
+    {
+        
+    }
+    else if(input == 'b')
+    {
+        
+    }
+    else if(input == 'c')
+    {
+        char input_c;
+        printf("What data would you like to access? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
+               " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
+        scanf("%c",&input_c);
+        input_c = tolower(input_c);
+        if(input_c == 'a')
+        {
+               TAlt *alt = newAltTitle();
+               alt = readAltTitlesFile(alt);
+               printf("Alt Size: %d\n", alt->size);
+        }
+        else if(input_c == 'b')
+        {
+            TBasic *tBasic = newTitleBasics();
+            tBasic = readTitleBasicsFile(tBasic);
+            printf("TBasic Size: %d\n", tBasic->size);
+      
+        }
+        else if(input_c == 'c')
+        {
+            TExecs *execs = newTitleExecs();
+            execs = readTitleExecsFile(execs);
+            printf("Exec Size: %d\n", execs->size);
+
+        }
+        else if(input_c == 'd')
+        {
+            TEpisode *episode = newTitleEpisode();
+            episode = readTitleEpisodeFile(episode);
+            printf("Episode Size: %d\n", episode->size);
+ 
+        }
+        else if(input_c == 'e')
+        {
+            TCrew *crew = newTitleCrew();
+            crew = readTitleCrewFile(crew);
+            printf("Crew Size: %d\n", crew->size);
+
+        }
+        else if(input_c == 'f')
+        {
+            TRating *rating = newTitleRating();
+            rating = readTitleRatingFile(rating);
+            printf("Rating Size: %d\n", rating->size);
+      
+        }
+        else if(input_c == 'g')
+        {
+            NBasic *nameBasics = newNameBasics();
+            nameBasics = readNameBasicsFile(nameBasics);
+            printf("NBasic Size: %d\n", nameBasics->size);
+        }
+        else
+        {
+            printf("Incorrect Input. Try Again\n");
+
+        }
+    }
+    else if(input == 'c')
+    {
+        
+    }
+    else if(input == 'd')
+    {
+        
+    }
+    else
+    {
+        printf("Incorrect Input. Try Again\n");
+    }
+               
+	/*TAlt *alt = newAltTitle();
 	TBasic *tBasic = newTitleBasics();
 	TExecs *execs = newTitleExecs();
 	TEpisode *episode = newTitleEpisode();
@@ -696,7 +784,7 @@ int main()
     rating = readTitleRatingFile(rating);
     nameBasics = readNameBasicsFile(nameBasics);
 	
-
+     
 	printf("Alt Size: %d\n", alt->size);
     printf("TBasic Size: %d\n", tBasic->size);
     printf("Exec Size: %d\n", execs->size);
@@ -707,6 +795,7 @@ int main()
     
     long sum = alt->size + tBasic->size + execs->size + episode->size + crew->size + rating->size + nameBasics->size;
     printf("Total Size: %lu\n", sum);
+     */
 	return 0;
 }
 

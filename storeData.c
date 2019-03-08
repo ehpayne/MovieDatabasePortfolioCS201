@@ -11,6 +11,21 @@
 #include "readFiles.h"
 #include "storeData.h"
 
+struct BSTNode
+{
+    struct BSTNode *left, *right;
+    char *key;
+    
+};
+
+Node *newBSTNode()
+{
+    Node *root = malloc(sizeof(Node));
+    
+    root->left = NULL;
+    root->right = NULL;
+    root->key = NULL;
+}
 
 void storeAltTitles(TAlt *altTitles)
 {
@@ -47,7 +62,7 @@ void storeNameBasics(NBasic *nameBasics)
 
 }
 
-void basicBSTInsert(char *ID)
+void basicBSTInsert(int type, void *ptr)
 {
     
 }

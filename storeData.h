@@ -5,10 +5,15 @@
  */
 
 #include <stdio.h>
-#include "readFile.h"
+#include "readFiles.h"
+
+typedef struct BSTNode Node;
+
+//Constructor
+extern Node *newBSTNode();
 
 //Storing the data
-extern void basicBSTInsert(char *ID);
+extern void basicBSTInsert(int type, void *ptr);
 extern void storeAltTitles(TAlt *altTitle);
 extern void storeTitleBasics(TBasic *titleBasics);
 extern void storeTitleExecs(TExecs *execs);
