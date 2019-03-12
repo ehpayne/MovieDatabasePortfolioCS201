@@ -12,5 +12,9 @@ typedef struct BSTree TreeNode;
 //Constructor
 TreeNode *newTree();
 //Storing the data
-extern void basicBSTInsert(void *node, int size);
-
+//extern void basicBSTInsert(void *node, int size);
+/*void basicBSTInsert(TAlt *altTitleNode, TBasic *basicTitleNode,
+                    TExecs *execsNode, TEpisode *episodeNode,
+                    TCrew *crewNode, TRating *ratingNode,
+                    NBasic *basicNameNode, int size)
+*/

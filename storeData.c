@@ -26,9 +26,29 @@ TreeNode *newTree()
     return tree;
     
 }
-void basicBSTInsert(void *node, int size)
+/*void basicBSTInsert(TAlt *altTitleNode, TBasic *basicTitleNode,
+                    TExecs *execsNode, TEpisode *episodeNode,
+                    TCrew *crewNode, TRating *ratingNode,
+                    NBasic *basicNameNode, int size)
 {
-    /*TreeNode *treeNode = newTree();
+    if(altTitleNode != NULL)
+    {
+        
+    }
+    else if(basicTitleNode != NULL)
+    {
+        
+    }
+    else if(execsNode != NULL)
+    {
+        
+    }
+    else if(episodeNode != NULL)
+    {
+        
+    }
+    else if(
+    TreeNode *treeNode = newTree();
     TreeNode *temp;
     TreeNode *back = NULL;
     
@@ -56,8 +76,8 @@ void basicBSTInsert(void *node, int size)
             }
         }
     }
-     */
+ 
     
     
 }
-
+*/

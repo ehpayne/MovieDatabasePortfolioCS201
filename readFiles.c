@@ -232,7 +232,14 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
 	char *line = malloc(sizeof(char *));
 	char *tab = "\t";
 	int lineSize = 1024;
-
+    
+   /* TBasic *tBasic = NULL;
+    TExecs *execs = NULL;
+    TEpisode *episode = NULL;
+    TCrew *crew = NULL;
+    TRating *rating = NULL;
+    NBasic *nBasic = NULL;
+    */
 	FILE *fptr;
 
 	fptr = fopen("title.akas.tsv", "r");
@@ -286,7 +293,7 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
 				altTitle->isOriginalTitle = atoi(token);
 			}
 		}
-        basicBSTInsert(altTitle, altTitle->size);
+        //basicBSTInsert(altTitle, tBasic, execs, episode, crew, rating, nBasic altTitle->size);
 		altTitle->size++;
 
 		if(feof(fptr))
@@ -294,7 +301,7 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
 			break;
 		}
 
-		//storeAltTitles(altTitle);
+		storeAltTitles(altTitle);
         
 
 	}
@@ -704,68 +711,135 @@ void storeNameBasics(NBasic *nameBasics)
 {
 
 }
-
-int main()
+void initialMenu()
 {
     char input;
-    printf("Would you like to: \n A. Create a record \n B. Retrieve a record \n "
-           "C. Update a record \n D. Delete a record\n" );
-    scanf("%c",&input);
-    input = tolower(input);
-    if(input == 'a')
+    do
     {
-        
-    }
-    else if(input == 'b')
-    {
-        char input_b;
-        printf("What data would you like to access? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
-               " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
-        scanf("%c",&input_b);
-        scanf("%c",&input_b);
-        input_b = tolower(input_b);
-        if(input_b == 'a')
+        printf("Would you like to: \n A. Create a record \n B. Retrieve a record \n "
+               "C. Update a record \n D. Delete a record\n" );
+        scanf("%c",&input);
+        input = tolower(input);
+        if(input == 'a')
         {
-               TAlt *alt = newAltTitle();
-               alt = readAltTitlesFile(alt);
-               printf("Alt Size: %d\n", alt->size);
+            createMenu();
         }
-        else if(input_b == 'b')
+        else if(input == 'b')
+        {
+            retrieveMenu();
+        }
+        else if(input == 'c')
+        {
+            updateMenu();
+        }
+        else if(input == 'd')
+        {
+            deleteMenu();
+        }
+        else
+        {
+            printf("Incorrect Input. Try Again\n");
+        }
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+    
+}
+void createMenu()
+{
+    char input;
+    do
+    {
+        printf("What type of record would you like to create?: \n A. Alternative Titles \n"
+               " B. Basic Title Info \n C. Directors/Writers \n D. Episode Info \n E. Title Actors/Crew \n F. Rating Info\n"
+               " G. Name Info\n");
+        scanf("%c",&input);
+        scanf("%c",&input);
+        input = tolower(input);
+        if(input == 'a')
+        {
+            
+        }
+        else if(input == 'b')
+        {
+            
+        }
+        else if(input == 'c')
+        {
+            
+        }
+        else if(input == 'd')
+        {
+            
+        }
+        else if(input == 'e')
+        {
+            
+        }
+        else if(input == 'f')
+        {
+            
+        }
+        else if(input == 'g')
+        {
+            
+        }
+        else
+        {
+            printf("Incorrect Input. Try Again.\n");
+        }
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+}
+void retrieveMenu()
+{
+    char input;
+    do
+    {
+        printf("What type of data would you like to access? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
+               " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
+        scanf("%c",&input);
+        scanf("%c",&input);
+        input = tolower(input);
+        if(input == 'a')
+        {
+            TAlt *alt = newAltTitle();
+            alt = readAltTitlesFile(alt);
+            printf("Alt Size: %d\n", alt->size);
+        }
+        else if(input == 'b')
         {
             TBasic *tBasic = newTitleBasics();
             tBasic = readTitleBasicsFile(tBasic);
             printf("TBasic Size: %d\n", tBasic->size);
-      
+            
         }
-        else if(input_b == 'c')
+        else if(input == 'c')
         {
             TExecs *execs = newTitleExecs();
             execs = readTitleExecsFile(execs);
             printf("Exec Size: %d\n", execs->size);
-
+            
         }
-        else if(input_b == 'd')
+        else if(input == 'd')
         {
             TEpisode *episode = newTitleEpisode();
             episode = readTitleEpisodeFile(episode);
             printf("Episode Size: %d\n", episode->size);
- 
+            
         }
-        else if(input_b == 'e')
+        else if(input == 'e')
         {
             TCrew *crew = newTitleCrew();
             crew = readTitleCrewFile(crew);
             printf("Crew Size: %d\n", crew->size);
-
+            
         }
-        else if(input_b == 'f')
+        else if(input == 'f')
         {
             TRating *rating = newTitleRating();
             rating = readTitleRatingFile(rating);
             printf("Rating Size: %d\n", rating->size);
-      
+            
         }
-        else if(input_b == 'g')
+        else if(input == 'g')
         {
             NBasic *nameBasics = newNameBasics();
             nameBasics = readNameBasicsFile(nameBasics);
@@ -773,52 +847,109 @@ int main()
         }
         else
         {
-            printf("Incorrect Input. Try Again\n");
-
+            printf("Incorrect Input. Try Again.\n");
+            
         }
-    }
-    else if(input == 'c')
-    {
-        
-    }
-    else if(input == 'd')
-    {
-        
-    }
-    else
-    {
-        printf("Incorrect Input. Try Again\n");
-    }
-               
-	/*TAlt *alt = newAltTitle();
-	TBasic *tBasic = newTitleBasics();
-	TExecs *execs = newTitleExecs();
-	TEpisode *episode = newTitleEpisode();
-	TCrew *crew = newTitleCrew();
-    TRating *rating = newTitleRating();
-    NBasic *nameBasics = newNameBasics();
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+}
 
-	alt = readAltTitlesFile(alt);
-	tBasic = readTitleBasicsFile(tBasic);
-	execs = readTitleExecsFile(execs);
-	episode = readTitleEpisodeFile(episode);
-	crew = readTitleCrewFile(crew);
-    rating = readTitleRatingFile(rating);
-    nameBasics = readNameBasicsFile(nameBasics);
-	
-     
-	printf("Alt Size: %d\n", alt->size);
-    printf("TBasic Size: %d\n", tBasic->size);
-    printf("Exec Size: %d\n", execs->size);
-    printf("Episode Size: %d\n", episode->size);
-    printf("Crew Size: %d\n", crew->size);
-    printf("Rating Size: %d\n", rating->size);
-    printf("NBasic Size: %d\n", nameBasics->size);
-    
-    long sum = alt->size + tBasic->size + execs->size + episode->size + crew->size + rating->size + nameBasics->size;
-    printf("Total Size: %lu\n", sum);
-     */
-	return 0;
+void updateMenu()
+{
+    char input;
+    do
+    {
+        printf("What type of data would you like to update? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
+               " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
+        scanf("%c",&input);
+        scanf("%c",&input);
+        input = tolower(input);
+        
+        if(input == 'a')
+        {
+            
+        }
+        else if(input == 'b')
+        {
+            
+        }
+        else if(input == 'c')
+        {
+            
+        }
+        else if(input == 'd')
+        {
+            
+        }
+        else if(input == 'e')
+        {
+            
+        }
+        else if(input == 'f')
+        {
+            
+        }
+        else if(input == 'g')
+        {
+            
+        }
+        else
+        {
+            printf("Incorrect Input. Try Again.\n");
+            
+        }
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+}
+
+void deleteMenu()
+{
+    char input;
+    do
+    {
+        printf("What type of data would you like to delete? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
+               " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
+        scanf("%c",&input);
+        scanf("%c",&input);
+        input = tolower(input);
+        
+        if(input == 'a')
+        {
+            
+        }
+        else if(input == 'b')
+        {
+            
+        }
+        else if(input == 'c')
+        {
+            
+        }
+        else if(input == 'd')
+        {
+            
+        }
+        else if(input == 'e')
+        {
+            
+        }
+        else if(input == 'f')
+        {
+            
+        }
+        else if(input == 'g')
+        {
+            
+        }
+        else
+        {
+            printf("Incorrect Input. Try Again.\n");
+        }
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+}
+
+int main()
+{
+    initialMenu();
+    return 0;
 }
 
 

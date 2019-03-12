@@ -25,6 +25,13 @@ extern TCrew *newTitleCrew();
 extern TRating *newTitleRating();
 extern NBasic *newNameBasics();
 
+//Menus
+extern void initialMenu();
+extern void createMenu();
+extern void retrieveMenu();
+extern void updateMenu();
+extern void deleteMenu();
+
 //Reading in files
 extern TAlt *readAltTitlesFile(TAlt *altTitle);
 extern TBasic *readTitleBasicsFile(TBasic *titleBasics);
