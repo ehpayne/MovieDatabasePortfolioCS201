@@ -15,7 +15,7 @@
 //contains information for alternative (AKA) titles (all the different languages)
 struct title_alternative
 {
-	char *titleID;       // an alphanumeric unique identifier of the title
+	char *ID;       // an alphanumeric unique identifier of the title
 	int ordering;        // a number to uniquely ID rows for a given titleID
 	char *title;         //the localized title
 	char *region;        //the region for this version of the title
@@ -24,12 +24,13 @@ struct title_alternative
 	char *altAttributes; //an array of alternative attributes (if any)
 	int isOriginalTitle; // boolean --> 0: Not original 1: Original
 	int size;						 // number of rows in the file
+    TAlt *left, *right;
 };
 
 //contains basic information for titles
 struct title_basics
 {
-	char *titleID;			      //unique identifier of the title
+	char *ID;			      //unique identifier of the title
 	char *titleType;          //the type.format of the title (e.g. movie, short, tv series, etc)
 	char *primaryTitle;       //the more popular title
 	char *originalTitle;      //original title in the original language
@@ -39,58 +40,64 @@ struct title_basics
 	int runtimeMinutes;				//primary runtime of the title in minutes
 	char **genres;						//includes up to three genres associated with the title
 	int size;									//number of rows in the file
+    TBasic *left, *right;
 };
 
 //contains the director and writer information for all the titles in IMDb
 struct title_execs
 {
-	char *titleID;			//alphanumeric unique identifier of the title
+	char *ID;			//alphanumeric unique identifier of the title
 	char **directors;		//director(s) of the given title
 	char **writers;			//writer(s) of the given title
 	int size;						//number of rows in the file
+    TExecs *left, *right;
 };
 
 //contains the TV episode information
 struct title_episode
 {
-	char *episodeID;			      //alphanumeric identifier of the episode
+	char *ID;			      //alphanumeric identifier of the episode
 	char *titleID;			        //alphanumeric identifier of the parent title (tv series title ID)
 	int seasonNumber;						//season number of the episodeID
 	int episodeNumber;					//episode number of the episodeID
 	int size;										//number of rows in the file
+    TEpisode *left, *right;
 };
 
 //contains the principal cast/crew for titles
 struct title_crew
 {
-	char *titleID;			 //alphanumeric unique identifier of the title
+	char *ID;			 //alphanumeric unique identifier of the title
 	int ordering;				 //a number to uniquely ID rows for a given titleID
 	char *nameID;			   //alphanumeric unique identifier of the name/person
 	char *category;			 //category of job the person was had
 	char *job;					 //the specific job title the person had
 	char *characterName; //the name of the character played (/N if not applicable)
 	int size;						 //number of rows in the file
+    TCrew  *left, *right;
 };
 
 //contains the IMDb rating and votes information for the titles
 struct title_ratings
 {
-	char *titleID;			      //alphanumeric unique identifier of the title
+	char *ID;			      //alphanumeric unique identifier of the title
 	double avgRating;					//weighted average of all the user ratings
 	int numVotes;							//number of votes the title has received
 	int size;									//number of rows in the file
+    TRating *left, *right;
 };
 
 //contains the following information for names
 struct name_basics
 {
-	char *nameID;				           //alphanumeric unique identifier of the name/person
+	char *ID;				           //alphanumeric unique identifier of the name/person
 	char *primaryName;	           //name by which the person is most often credited
 	char *birthYear;						   //YYYY
 	char *deathYear;						   //YYYY (or /N if person is still alive)
 	char **primeProfession;        //top-3 professions of the person
 	char **knownForTitles;		     //array of titleIDs
 	int size;											 //number of rows in the file
+    NBasic *left, *right;
 };
 
 
@@ -100,7 +107,7 @@ TAlt * newAltTitle()
 {
 	TAlt* altTitle = malloc(sizeof(TAlt));
 
-	altTitle->titleID = "";
+	altTitle->ID = "";
 	altTitle->ordering = 0;
 	altTitle->title = "";
 	altTitle->region = "";
@@ -108,6 +115,9 @@ TAlt * newAltTitle()
 	altTitle->type = "";
 	altTitle->isOriginalTitle = 0;
 	altTitle->size = 0;
+    altTitle->left = NULL;
+    altTitle->right = NULL;
+    
 
 	return altTitle;
 }
@@ -117,7 +127,7 @@ TBasic *newTitleBasics()
 {
 	TBasic *titleBasics = malloc(sizeof(TBasic));
 
-	titleBasics->titleID = "";
+	titleBasics->ID = "";
 	titleBasics->titleType = "";
 	titleBasics->primaryTitle = "";
 	titleBasics->originalTitle = "";
@@ -127,6 +137,8 @@ TBasic *newTitleBasics()
 	titleBasics->runtimeMinutes = 0;
 	titleBasics->genres = NULL;
 	titleBasics->size = 0;
+    titleBasics->left = NULL;
+    titleBasics->right = NULL;
 
 	return titleBasics;
 }
@@ -136,10 +148,12 @@ TExecs *newTitleExecs()
 {
 	TExecs *execs = malloc(sizeof(TExecs));
 
-	execs->titleID = "";
+	execs->ID = "";
 	execs->directors = NULL;
 	execs->writers = NULL;
 	execs->size = 0;
+    execs->left = NULL;
+    execs->right = NULL;
 
 	return execs;
 }
@@ -149,11 +163,13 @@ TEpisode *newTitleEpisode()
 {
 	TEpisode *episode = malloc(sizeof(TEpisode));
 
-	episode->episodeID = "";
+	episode->ID = "";
 	episode->titleID = "";
 	episode->seasonNumber = 0;
 	episode->episodeNumber = 0;
 	episode->size = 0;
+    episode->left = NULL;
+    episode->right = NULL;
 
 	return episode;
 }
@@ -163,13 +179,15 @@ TCrew *newTitleCrew()
 {
 	TCrew *crew = malloc(sizeof(TCrew));
 
-	crew->titleID = "";
+	crew->ID = "";
 	crew->ordering = 0;
 	crew->nameID = "";
 	crew->category = "";
 	crew->job = "";
 	crew->characterName = "";
 	crew->size = 0;
+    crew->left = NULL;
+    crew->right = NULL;
 
 	return crew;
 }
@@ -179,10 +197,12 @@ TRating *newTitleRating()
 {
 	TRating *rating = malloc(sizeof(TRating));
 
-	rating->titleID = "";
+	rating->ID = "";
 	rating->avgRating = 0.0;
 	rating->numVotes = 0;
 	rating->size = 0;
+    rating->left = NULL;
+    rating->right = NULL;
 
 	return rating;
 }
@@ -192,13 +212,15 @@ NBasic *newNameBasics()
 {
 	NBasic *nameBasics = malloc(sizeof(NBasic));
 
-	nameBasics->nameID = "";
+	nameBasics->ID = "";
 	nameBasics->primaryName = "";
 	nameBasics->birthYear = "YYYY";
 	nameBasics->deathYear = "YYYY";
 	nameBasics->primeProfession = NULL;
 	nameBasics->knownForTitles = NULL;
 	nameBasics->size = 0;
+    nameBasics->left = NULL;
+    nameBasics->right = NULL;
 
 	return nameBasics;
 }
@@ -233,7 +255,7 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
 			}
 			if(i == 0)
 			{
-				altTitle->titleID = token;
+				altTitle->ID = token;
 			}
 			if(i == 1)
 			{
@@ -264,6 +286,7 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
 				altTitle->isOriginalTitle = atoi(token);
 			}
 		}
+        basicBSTInsert(altTitle, altTitle->size);
 		altTitle->size++;
 
 		if(feof(fptr))
@@ -271,7 +294,8 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
 			break;
 		}
 
-		storeAltTitles(altTitle);
+		//storeAltTitles(altTitle);
+        
 
 	}
 
@@ -306,7 +330,7 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
 			}
 			if(i == 0)
 			{
-				titleBasics->titleID = token;
+				titleBasics->ID = token;
 			}
 			if(i == 1)
 			{
@@ -392,7 +416,7 @@ TExecs *readTitleExecsFile(TExecs *execs)
 			char *token = strtok(line, tab);
 			if(i == 0)
 			{
-				execs->titleID = token;
+				execs->ID = token;
 			}
 			if(i == 1)
 			{
@@ -442,7 +466,7 @@ TEpisode *readTitleEpisodeFile(TEpisode *episode)
 			char *token = strtok(line, tab);
 			if(i == 0)
 			{
-				episode->episodeID = token;
+				episode->ID = token;
 			}
 			if(i == 1)
 			{
@@ -496,7 +520,7 @@ TCrew *readTitleCrewFile(TCrew *crew)
 			char *token = strtok(line, tab);
 			if(i == 0)
 			{
-				crew->titleID = token;
+				crew->ID = token;
 			}
 			if(i == 1)
 			{
@@ -559,7 +583,7 @@ TRating *readTitleRatingFile(TRating *rating)
             char *token = strtok(line, tab);
             if(i == 0)
             {
-                rating->titleID = token;
+                rating->ID = token;
             }
             if(i == 1)
             {
@@ -609,7 +633,7 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
             char *token = strtok(line, tab);
             if(i == 0)
             {
-                nameBasics->nameID = token;
+                nameBasics->ID = token;
             }
             if(i == 1)
             {
@@ -684,7 +708,8 @@ void storeNameBasics(NBasic *nameBasics)
 int main()
 {
     char input;
-    printf("Would you like to: \n A. Create \n B. Retrieve \n C. Update \n D. Delete\n" );
+    printf("Would you like to: \n A. Create a record \n B. Retrieve a record \n "
+           "C. Update a record \n D. Delete a record\n" );
     scanf("%c",&input);
     input = tolower(input);
     if(input == 'a')
@@ -693,57 +718,54 @@ int main()
     }
     else if(input == 'b')
     {
-        
-    }
-    else if(input == 'c')
-    {
-        char input_c;
+        char input_b;
         printf("What data would you like to access? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
                " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
-        scanf("%c",&input_c);
-        input_c = tolower(input_c);
-        if(input_c == 'a')
+        scanf("%c",&input_b);
+        scanf("%c",&input_b);
+        input_b = tolower(input_b);
+        if(input_b == 'a')
         {
                TAlt *alt = newAltTitle();
                alt = readAltTitlesFile(alt);
                printf("Alt Size: %d\n", alt->size);
         }
-        else if(input_c == 'b')
+        else if(input_b == 'b')
         {
             TBasic *tBasic = newTitleBasics();
             tBasic = readTitleBasicsFile(tBasic);
             printf("TBasic Size: %d\n", tBasic->size);
       
         }
-        else if(input_c == 'c')
+        else if(input_b == 'c')
         {
             TExecs *execs = newTitleExecs();
             execs = readTitleExecsFile(execs);
             printf("Exec Size: %d\n", execs->size);
 
         }
-        else if(input_c == 'd')
+        else if(input_b == 'd')
         {
             TEpisode *episode = newTitleEpisode();
             episode = readTitleEpisodeFile(episode);
             printf("Episode Size: %d\n", episode->size);
  
         }
-        else if(input_c == 'e')
+        else if(input_b == 'e')
         {
             TCrew *crew = newTitleCrew();
             crew = readTitleCrewFile(crew);
             printf("Crew Size: %d\n", crew->size);
 
         }
-        else if(input_c == 'f')
+        else if(input_b == 'f')
         {
             TRating *rating = newTitleRating();
             rating = readTitleRatingFile(rating);
             printf("Rating Size: %d\n", rating->size);
       
         }
-        else if(input_c == 'g')
+        else if(input_b == 'g')
         {
             NBasic *nameBasics = newNameBasics();
             nameBasics = readNameBasicsFile(nameBasics);

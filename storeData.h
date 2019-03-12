@@ -7,17 +7,10 @@
 #include <stdio.h>
 #include "readFiles.h"
 
-typedef struct BSTNode Node;
+typedef struct BSTree TreeNode;
 
 //Constructor
-extern Node *newBSTNode();
-
+TreeNode *newTree();
 //Storing the data
-extern void basicBSTInsert(int type, void *ptr);
-extern void storeAltTitles(TAlt *altTitle);
-extern void storeTitleBasics(TBasic *titleBasics);
-extern void storeTitleExecs(TExecs *execs);
-extern void storeTitleEpisode(TEpisode *episode);
-extern void storeTitleCrew(TCrew *crew);
-extern void storeTitleRating(TRating *rating);
-extern void storeNameBasics(NBasic *nameBasics);
+extern void basicBSTInsert(void *node, int size);
+

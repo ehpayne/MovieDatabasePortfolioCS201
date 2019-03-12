@@ -11,59 +11,53 @@
 #include "readFiles.h"
 #include "storeData.h"
 
-struct BSTNode
+struct BSTree
 {
-    struct BSTNode *left, *right;
-    char *key;
-    
+    void *tNode;
+    void *left, *right;
 };
-
-Node *newBSTNode()
+TreeNode *newTree()
 {
-    Node *root = malloc(sizeof(Node));
+    TreeNode *tree = malloc(sizeof(TreeNode));
+    tree->tNode = NULL;
+    tree->left = NULL;
+    tree->right = NULL;
     
-    root->left = NULL;
-    root->right = NULL;
-    root->key = NULL;
+    return tree;
+    
 }
-
-void storeAltTitles(TAlt *altTitles)
+void basicBSTInsert(void *node, int size)
 {
-
-}
-
-void storeTitleBasics(TBasic *titleBasics)
-{
-
-}
-
-void storeTitleExecs(TExecs *execs)
-{
-
-}
-
-void storeTitleEpisode(TEpisode *episode)
-{
-
-}
-
-void storeTitleCrew(TCrew *crew)
-{
-
-}
-
-void storeTitleRating(TRating *rating)
-{
-
-}
-
-void storeNameBasics(NBasic *nameBasics)
-{
-
-}
-
-void basicBSTInsert(int type, void *ptr)
-{
+    /*TreeNode *treeNode = newTree();
+    TreeNode *temp;
+    TreeNode *back = NULL;
+    
+    if(node == NULL)
+    {
+        return;
+    }
+    if(size == 0) //root
+    {
+        treeNode->tNode = node;
+    }
+    else
+    {
+        temp = treeNode;
+        while(temp != NULL)
+        {
+            back = temp;
+            if(node->ID < temp->ID)
+            {
+                temp = temp->left;
+            }
+            else
+            {
+                temp = temp->right;
+            }
+        }
+    }
+     */
+    
     
 }
 
