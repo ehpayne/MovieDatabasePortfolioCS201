@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
+#include <stddef.h>
 #include "readFiles.h"
 #include "storeData.h"
 
@@ -99,8 +100,6 @@ struct name_basics
 	int size;											 //number of rows in the file
     NBasic *left, *right;
 };
-
-
 
 //Constructor for TAlt structure
 TAlt * newAltTitle()
@@ -225,172 +224,140 @@ NBasic *newNameBasics()
 	return nameBasics;
 }
 
-//reads in the title.akas TSV file and assigns the information to the corresponding
-//variable
+//reads in the title.akas TSV file and assigns the information to the
+//corresponding variable
 TAlt* readAltTitlesFile(TAlt *altTitle)
 {
 	char *line = malloc(sizeof(char *));
 	char *tab = "\t";
 	int lineSize = 1024;
-    
-   /* TBasic *tBasic = NULL;
-    TExecs *execs = NULL;
-    TEpisode *episode = NULL;
-    TCrew *crew = NULL;
-    TRating *rating = NULL;
-    NBasic *nBasic = NULL;
-    */
-	FILE *fptr;
 
+	FILE *fptr;
+    
+    //open the file
 	fptr = fopen("title.akas.tsv", "r");
 	if(fptr == NULL)
 	{
 		perror("Error: ");
 	}
+    //read in the header line
 	fgets(line, lineSize, fptr);
-	//printf("line:%s\n", line);
+    
+    //while !EOF get a line and parse the data
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
+        char *copy = strdup(line);
+        
+        char *token = strtok(copy, tab);
+        altTitle->ID = token;
+        
+        token = strtok(NULL, tab);
+        altTitle->ordering = atoi(token);
+        
+        token = strtok(NULL, tab);
+        altTitle->title = token;
+        
+        token = strtok(NULL, tab);
+        altTitle->region = token;
+        
+        token = strtok(NULL, tab);
+        altTitle->language = token;
+        
+        token = strtok(NULL, tab);
+        altTitle->type = token;
+        
+        token = strtok(NULL, tab);
+        altTitle->altAttributes = token;
+        
+        token = strtok(NULL, tab);
+        altTitle->isOriginalTitle = atoi(token);
 
-		//	printf("line:%s\n", line);
-		for(int i = 0; i<8; i++)
-		{
-			char *token = strtok(line, tab);
-			if(token == NULL)
-			{
-				break;
-			}
-			if(i == 0)
-			{
-				altTitle->ID = token;
-			}
-			if(i == 1)
-			{
-				altTitle->ordering = atoi(token);
-			}
-			if(i == 2)
-			{
-				altTitle->title = token;
-			}
-			if(i == 3)
-			{
-				altTitle->region = token;
-			}
-			if(i == 4)
-			{
-				altTitle->language = token;
-			}
-			if(i == 5)
-			{
-				altTitle->type = token;		
-			}
-			if(i == 6)
-			{	
-				altTitle->altAttributes = token;
-			}
-			if(i == 7)
-			{
-				altTitle->isOriginalTitle = atoi(token);
-			}
-		}
-        //basicBSTInsert(altTitle, tBasic, execs, episode, crew, rating, nBasic altTitle->size);
 		altTitle->size++;
 
 		if(feof(fptr))
 		{
 			break;
 		}
-
-		storeAltTitles(altTitle);
-        
-
 	}
 
 	fclose(fptr);
 	return altTitle;
 }
 
+//reads in the title.basics TSV file and assigns the information to the
+//corresponding variable
 TBasic *readTitleBasicsFile(TBasic *titleBasics)
 {
 	char *line = malloc(sizeof(char *));
 	char *tab = "\t";
 	int lineSize = 1024;
 
+    //open the file
 	FILE *fptr;
     fptr = fopen("title.basics.tsv", "r");
 	if(fptr == NULL)
 	{
 		perror("Error: ");
 	}
+    //read in the header line
 	fgets(line, lineSize, fptr);
-	//printf("line:%s\n", line);
+    
+    //while !EOF read a line and parse the data
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
-		//printf("line:%s\n", line);
-		for(int i = 0; i<9; i++)
-		{
-			//printf("i = %d\n", i);
-			char *token = strtok(line, tab);
-			if(token == NULL)
-			{
-				break;
-			}
-			if(i == 0)
-			{
-				titleBasics->ID = token;
-			}
-			if(i == 1)
-			{
-				titleBasics->titleType = token;
-			}
-			if(i == 2)
-			{
-				titleBasics->primaryTitle = token;
-			}
-			if(i == 3)
-			{
-				titleBasics->originalTitle = token;
-			}
-			if(i == 4)
-			{
-				titleBasics->isAdult = atoi(token);
-			}
-			if(i == 5)
-			{
-				titleBasics->startYear = token;
-			}
-			if(i == 6)
-			{
-				titleBasics->endYear = token;
-			}
-			if(i == 7)
-			{
-				titleBasics->runtimeMinutes = atoi(token);
-			}
-			if(i == 8)
-			{
-				/*for(int j = 0; j < 3; j++)
-					{
-					char* subtoken = strtok(token, ",");
-					printf("%s\n", subtoken);
-					while(subtoken != NULL)
-					{
-					titleBasics->genres[i] = subtoken;
-					}
-					}*/
-			}
-
-		}
-
+        char *copy = strdup(line);
+        char *token = strtok(copy, tab);
+        titleBasics->ID = token;
+        
+        token = strtok(NULL, tab);
+        titleBasics->titleType = token;
+        
+        token = strtok(NULL, tab);
+        titleBasics->primaryTitle = token;
+        
+        token = strtok(NULL, tab);
+        titleBasics->originalTitle = token;
+        
+        token = strtok(NULL, tab);
+        titleBasics->isAdult = atoi(token);
+        
+        token = strtok(NULL, tab);
+        titleBasics->startYear = token;
+        
+        token = strtok(NULL, tab);
+        titleBasics->endYear = token;
+        
+        token = strtok(NULL, tab);
+        titleBasics->runtimeMinutes = atoi(token);
+        
+        token = strtok(NULL, tab);
+        printf("genre token: %s\n", token);
+        copy = strdup(token);
+        char* subtoken = strtok(copy, ",");
+            
+        if(subtoken == NULL)
+        {
+            printf("%s\n", copy);
+            titleBasics->genres = &token;
+            }
+        else
+        {
+            int i = 0;
+                //printf("here 1");
+            while(subtoken != NULL)
+            {
+                    //printf("here 2");
+                titleBasics->genres = &subtoken;
+                i++;
+                subtoken = strtok(NULL, ",");
+            }
+        }
 		titleBasics->size++;
 
 		if(feof(fptr))
 		{
 			break;
 		}
-
-		storeTitleBasics(titleBasics);
-
 	}
 
 	fclose(fptr);
@@ -405,35 +372,26 @@ TExecs *readTitleExecsFile(TExecs *execs)
 	int lineSize = 1024;
 
 	FILE *fptr;
-
+    //open the file
 	fptr = fopen("title.crew.tsv", "r");
 	if(fptr == NULL)
 	{
 		perror("Error: ");
 	}
 	fgets(line, lineSize, fptr);
-	//printf("line:%s\n", line);
+	
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
-
-		//    printf("line:%s\n", line);
-		for(int i = 0; i<3; i++)
-		{
-
-			char *token = strtok(line, tab);
-			if(i == 0)
-			{
-				execs->ID = token;
-			}
-			if(i == 1)
-			{
-				//assign directors to execs->directors
-			}
-			if(i == 2)
-			{
-				//assign writers to execs->writers
-			}
-		}
+        char *copy = strdup(line);
+        
+        char *token = strtok(copy, tab);
+        execs->ID = token;
+        
+        token = strtok(copy, tab);
+        
+        token = strtok(copy, tab);
+		
+        
 		execs->size++;
 
 		if(feof(fptr))
@@ -441,7 +399,6 @@ TExecs *readTitleExecsFile(TExecs *execs)
 			break;
 		}
 
-		storeTitleExecs(execs);
 	}
 
 	fclose(fptr);
@@ -494,8 +451,6 @@ TEpisode *readTitleEpisodeFile(TEpisode *episode)
 		{
 			break;
 		}
-
-		storeTitleEpisode(episode);
 	}
 
 	fclose(fptr);
@@ -516,11 +471,9 @@ TCrew *readTitleCrewFile(TCrew *crew)
 		perror("Error: ");
 	}
 	fgets(line, lineSize, fptr);
-	//printf("line:%s\n", line);
+	
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
-
-		//    printf("line:%s\n", line);
 		for(int i = 0; i<6; i++)
 		{
 
@@ -556,8 +509,6 @@ TCrew *readTitleCrewFile(TCrew *crew)
 		{
 			break;
 		}
-
-		storeTitleCrew(crew);
 	}
 
 	fclose(fptr);
@@ -607,8 +558,6 @@ TRating *readTitleRatingFile(TRating *rating)
         {
             break;
         }
-        
-        storeTitleRating(rating);
     }
     
     fclose(fptr);
@@ -629,14 +578,11 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
         perror("Error: ");
     }
     fgets(line, lineSize, fptr);
-    //printf("line:%s\n", line);
+    
     while (fgets(line, lineSize, fptr) != NULL)
     {
-        
-        //    printf("line:%s\n", line);
         for(int i = 0; i<6; i++)
         {
-            
             char *token = strtok(line, tab);
             if(i == 0)
             {
@@ -669,55 +615,46 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
         {
             break;
         }
-        
-        storeNameBasics(nameBasics);
     }
     
     fclose(fptr);
     return nameBasics;
 }
-
-void storeAltTitles(TAlt *altTitles)
+void welcomeMenu()
 {
-
-}
-
-void storeTitleBasics(TBasic *titleBasics)
-{
-
-}
-
-void storeTitleExecs(TExecs *execs)
-{
-
-}
-
-void storeTitleEpisode(TEpisode *episode)
-{
-
-}
-
-void storeTitleCrew(TCrew *crew)
-{
-
-}
-
-void storeTitleRating(TRating *rating)
-{
-
-}
-
-void storeNameBasics(NBasic *nameBasics)
-{
-
+    char input;
+    
+    do
+    {
+        printf("\n\nWELCOME TO THE MOVIE DATABASE! \n\n");
+        printf("Please select one of the following choices:\n");
+        printf(" A. Create a new user account\n B. Login\n");
+        scanf("%c",&input);
+        input = tolower(input);
+        if(input == 'a')
+        {
+            //newUserMenu();
+        }
+        else if(input == 'b')
+        {
+            //loginMenu();
+        }
+        else
+        {
+            printf("Incorrect Input. Enter a letter A-B. Try Again\n\n");
+        }
+    }while(input == 'a' && input == 'b');
+    initialMenu();
 }
 void initialMenu()
 {
     char input;
     do
     {
-        printf("Would you like to: \n A. Create a record \n B. Retrieve a record \n "
-               "C. Update a record \n D. Delete a record\n" );
+        printf("Would you like to: \n A. Create a record \n"
+               " B. Retrieve a record \n C. Update a record \n"
+               " D. Delete a record\n" );
+        scanf("%c",&input);
         scanf("%c",&input);
         input = tolower(input);
         if(input == 'a')
@@ -738,9 +675,10 @@ void initialMenu()
         }
         else
         {
-            printf("Incorrect Input. Try Again\n");
+            printf("Incorrect Input. Enter a letter A-D. Try Again\n");
         }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
+           &&input != 'e' && input != 'f' && input != 'g');
     
 }
 void createMenu()
@@ -748,9 +686,10 @@ void createMenu()
     char input;
     do
     {
-        printf("What type of record would you like to create?: \n A. Alternative Titles \n"
-               " B. Basic Title Info \n C. Directors/Writers \n D. Episode Info \n E. Title Actors/Crew \n F. Rating Info\n"
-               " G. Name Info\n");
+        printf("What type of record would you like to create? \n"
+               " A. Alternative Titles \n B. Basic Title Info \n"
+               " C. Directors/Writers \n D. Episode Info \n"
+               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
         scanf("%c",&input);
         scanf("%c",&input);
         input = tolower(input);
@@ -786,15 +725,18 @@ void createMenu()
         {
             printf("Incorrect Input. Try Again.\n");
         }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
+           &&input != 'e' && input != 'f' && input != 'g');
 }
 void retrieveMenu()
 {
     char input;
     do
     {
-        printf("What type of data would you like to access? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
-               " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
+        printf("What type of data would you like to retrieve? \n"
+               " A. Alternative Titles \n B. Basic Title Info \n"
+               " C. Directors/Writers \n D. Episode Info \n"
+               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
         scanf("%c",&input);
         scanf("%c",&input);
         input = tolower(input);
@@ -850,7 +792,8 @@ void retrieveMenu()
             printf("Incorrect Input. Try Again.\n");
             
         }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
+           &&input != 'e' && input != 'f' && input != 'g');
 }
 
 void updateMenu()
@@ -858,8 +801,10 @@ void updateMenu()
     char input;
     do
     {
-        printf("What type of data would you like to update? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
-               " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
+        printf("What type of data would you like to update? \n"
+               " A. Alternative Titles \n B. Basic Title Info \n"
+               " C. Directors/Writers \n D. Episode Info \n"
+               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
         scanf("%c",&input);
         scanf("%c",&input);
         input = tolower(input);
@@ -897,7 +842,8 @@ void updateMenu()
             printf("Incorrect Input. Try Again.\n");
             
         }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
+           &&input != 'e' && input != 'f' && input != 'g');
 }
 
 void deleteMenu()
@@ -905,8 +851,10 @@ void deleteMenu()
     char input;
     do
     {
-        printf("What type of data would you like to delete? \n A. Alternative Titles \n B. Basic Title Info \n C. Directors/Writers \n"
-               " D. Episode Info \n E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
+        printf("What type of data would you like to delete? \n"
+               " A. Alternative Titles \n B. Basic Title Info \n"
+               " C. Directors/Writers \n D. Episode Info \n"
+               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
         scanf("%c",&input);
         scanf("%c",&input);
         input = tolower(input);
@@ -943,12 +891,13 @@ void deleteMenu()
         {
             printf("Incorrect Input. Try Again.\n");
         }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd' && input != 'e' && input != 'f' && input != 'g');
+    }while(input != 'a' && input != 'b' && input != 'c' &&
+           input != 'd' && input != 'e' && input != 'f' && input != 'g');
 }
 
 int main()
 {
-    initialMenu();
+    welcomeMenu();
     return 0;
 }
 
