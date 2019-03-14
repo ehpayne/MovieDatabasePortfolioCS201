@@ -134,7 +134,7 @@ TBasic *newTitleBasics()
 	titleBasics->startYear = "YYYY";
 	titleBasics->endYear = "YYYY";
 	titleBasics->runtimeMinutes = 0;
-	titleBasics->genres = NULL;
+    titleBasics->genres = (char**)malloc(3 * sizeof(char*));
 	titleBasics->size = 0;
     titleBasics->left = NULL;
     titleBasics->right = NULL;
@@ -148,8 +148,8 @@ TExecs *newTitleExecs()
 	TExecs *execs = malloc(sizeof(TExecs));
 
 	execs->ID = "";
-	execs->directors = NULL;
-	execs->writers = NULL;
+	execs->directors = (char**)malloc(40 * sizeof(char*));
+	execs->writers = (char**)malloc(65 * sizeof(char*));
 	execs->size = 0;
     execs->left = NULL;
     execs->right = NULL;
@@ -215,8 +215,8 @@ NBasic *newNameBasics()
 	nameBasics->primaryName = "";
 	nameBasics->birthYear = "YYYY";
 	nameBasics->deathYear = "YYYY";
-	nameBasics->primeProfession = NULL;
-	nameBasics->knownForTitles = NULL;
+	nameBasics->primeProfession = (char**)malloc(3 * sizeof(char*));
+	nameBasics->knownForTitles = (char**)malloc(4 * sizeof(char*));
 	nameBasics->size = 0;
     nameBasics->left = NULL;
     nameBasics->right = NULL;
@@ -331,27 +331,26 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
         titleBasics->runtimeMinutes = atoi(token);
         
         token = strtok(NULL, tab);
-        printf("genre token: %s\n", token);
         copy = strdup(token);
+        
         char* subtoken = strtok(copy, ",");
-            
-        if(subtoken == NULL)
+        titleBasics->genres[0] = malloc(strlen(subtoken) + 1);
+        strcpy(titleBasics->genres[0], subtoken);
+
+        for(int i = 1; i <=2; i++)
         {
-            printf("%s\n", copy);
-            titleBasics->genres = &token;
-            }
-        else
-        {
-            int i = 0;
-                //printf("here 1");
-            while(subtoken != NULL)
+            subtoken = strtok(NULL, ",");
+            if(subtoken == NULL)
             {
-                    //printf("here 2");
-                titleBasics->genres = &subtoken;
-                i++;
-                subtoken = strtok(NULL, ",");
+                break;
+            }
+            else
+            {
+                titleBasics->genres[i] = malloc(strlen(subtoken) + 1);
+                strcpy(titleBasics->genres[i], subtoken);
             }
         }
+
 		titleBasics->size++;
 
 		if(feof(fptr))
@@ -366,7 +365,6 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
 
 TExecs *readTitleExecsFile(TExecs *execs)
 {
-
 	char *line = malloc(sizeof(char *));
 	char *tab = "\t";
 	int lineSize = 1024;
@@ -387,11 +385,58 @@ TExecs *readTitleExecsFile(TExecs *execs)
         char *token = strtok(copy, tab);
         execs->ID = token;
         
-        token = strtok(copy, tab);
+        char *d_token = strtok(NULL, tab);
+        char *w_token = strtok(NULL, tab);
         
-        token = strtok(copy, tab);
+        copy = strdup(d_token);
+        
+        //printf("directors token: %s\n", copy);
+        char* subtoken = strtok(copy, ",");
+        execs->directors[0] = malloc(strlen(subtoken) + 1);
+        strcpy(execs->directors[0], subtoken);
+        //printf("subtoken 0: %s\n", subtoken);
+        
+        for(int i = 1; i <=40; i++)
+        {
+            
+            subtoken = strtok(NULL, ",");
+            if(subtoken == NULL)
+            {
+                
+                break;
+            }
+            else
+            {
+                //printf("subtoken %d: %s\n", i, subtoken);
+                execs->directors[i] = malloc(strlen(subtoken) + 1);
+                strcpy(execs->directors[i], subtoken);
+            }
+        }
+
+        copy = strdup(w_token);
+        //printf("here 4\n");
+        //printf("writers token: %s\n", copy);
+        subtoken = strtok(copy, ",");
+        execs->writers[0] = malloc(strlen(subtoken) + 1);
+        strcpy(execs->writers[0], subtoken);
+        //printf("subtoken 0: %s\n", subtoken);
+        
+        for(int i = 1; i <=65; i++)
+        {
+            subtoken = strtok(NULL, ",");
+            if(subtoken == NULL)
+            {
+                break;
+            }
+            else
+            {
+                //printf("subtoken %d: %s\n", i, subtoken);
+                execs->writers[i] = malloc(strlen(subtoken) + 1);
+                strcpy(execs->writers[i], subtoken);
+            }
+        }
 		
-        
+        //printf("HERE!\n");
 		execs->size++;
 
 		if(feof(fptr))
@@ -422,29 +467,20 @@ TEpisode *readTitleEpisodeFile(TEpisode *episode)
 	//printf("line:%s\n", line);
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
+        char *copy = strdup(line);
+        
+        char *token = strtok(copy, tab);
+        episode->ID = token;
+        
+        token = strtok(copy, tab);
+        episode->titleID = token;
+        
+        token = strtok(copy, tab);
+        episode->seasonNumber = atoi(token);
+        
+        token = strtok(copy, tab);
+        episode->episodeNumber = atoi(token);
 
-		//    printf("line:%s\n", line);
-		for(int i = 0; i<4; i++)
-		{
-
-			char *token = strtok(line, tab);
-			if(i == 0)
-			{
-				episode->ID = token;
-			}
-			if(i == 1)
-			{
-				episode->titleID = token;
-			}
-			if(i == 2)
-			{
-				episode->seasonNumber = atoi(token);
-			}
-			if(i == 3)
-			{
-				episode->episodeNumber = atoi(token);
-			}
-		}
 		episode->size++;
 
 		if(feof(fptr))
@@ -474,35 +510,23 @@ TCrew *readTitleCrewFile(TCrew *crew)
 	
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
-		for(int i = 0; i<6; i++)
-		{
-
-			char *token = strtok(line, tab);
-			if(i == 0)
-			{
-				crew->ID = token;
-			}
-			if(i == 1)
-			{
-				crew->ordering = atoi(token);
-			}
-			if(i == 2)
-			{
-				crew->nameID = token;
-			}
-			if(i == 3)
-			{
-				crew->category = token;
-			}
-			if(i == 4)
-			{
-				crew->job = token;
-			}
-			if(i == 5)
-			{
-				crew->characterName = token;
-			}
-		}
+        char *copy = strdup(line);
+        
+        char *token = strtok(copy, tab);
+        crew->ID = token;
+        
+        token = strtok(copy, tab);
+        crew->ordering = atoi(token);
+        
+        token = strtok(copy, tab);
+        crew->nameID = token;
+        
+        token = strtok(copy, tab);
+        crew->category = token;
+        
+        token = strtok(copy, tab);
+        crew->characterName = token;
+        
 		crew->size++;
 
 		if(feof(fptr))
@@ -533,25 +557,17 @@ TRating *readTitleRatingFile(TRating *rating)
     //printf("line:%s\n", line);
     while (fgets(line, lineSize, fptr) != NULL)
     {
+        char *copy = strdup(line);
         
-        //    printf("line:%s\n", line);
-        for(int i = 0; i<3; i++)
-        {
-            
-            char *token = strtok(line, tab);
-            if(i == 0)
-            {
-                rating->ID = token;
-            }
-            if(i == 1)
-            {
-                rating->avgRating = atof(token);
-            }
-            if(i == 2)
-            {
-                rating->numVotes = atoi(token);
-            }
-        }
+        char *token = strtok(copy, tab);
+        rating->ID = token;
+        
+        token = strtok(copy, tab);
+        rating->avgRating = atof(token);
+        
+        token = strtok(copy, tab);
+        rating->numVotes = atoi(token);
+        
         rating->size++;
         
         if(feof(fptr))
@@ -572,7 +588,7 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
     
     FILE *fptr;
     
-    fptr = fopen("title.principals.tsv", "r");
+    fptr = fopen("name.basics.tsv", "r");
     if(fptr == NULL)
     {
         perror("Error: ");
@@ -581,34 +597,71 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
     
     while (fgets(line, lineSize, fptr) != NULL)
     {
-        for(int i = 0; i<6; i++)
+        char *copy = strdup(line);
+        
+        char *token = strtok(copy, tab);
+        nameBasics->ID = token;
+        
+        token = strtok(copy, tab);
+        nameBasics->primaryName = token;
+        
+        token = strtok(copy, tab);
+        nameBasics->birthYear = token;
+        
+        token = strtok(copy, tab);
+        nameBasics->deathYear = token;
+        
+        char *p_token = strtok(NULL, tab);
+        char *k_token = strtok(NULL, tab);
+        
+        copy = strdup(p_token);
+        
+        //printf("directors token: %s\n", copy);
+        char* subtoken = strtok(copy, ",");
+        nameBasics->primeProfession[0] = malloc(strlen(subtoken) + 1);
+        strcpy(nameBasics->primeProfession[0], subtoken);
+        //printf("subtoken 0: %s\n", subtoken);
+        
+        for(int i = 1; i <=2; i++)
         {
-            char *token = strtok(line, tab);
-            if(i == 0)
+            
+            subtoken = strtok(NULL, ",");
+            if(subtoken == NULL)
             {
-                nameBasics->ID = token;
+                
+                break;
             }
-            if(i == 1)
+            else
             {
-                nameBasics->primaryName = token;
-            }
-            if(i == 2)
-            {
-                nameBasics->birthYear = token;
-            }
-            if(i == 3)
-            {
-                nameBasics->deathYear = token;
-            }
-            if(i == 4)
-            {
-                //assign pramary profession to nameBasics->primeProfession
-            }
-            if(i == 5)
-            {
-                //assign known for titles to nameBasics->knownForTitles
+                //printf("subtoken %d: %s\n", i, subtoken);
+                nameBasics->primeProfession[i] = malloc(strlen(subtoken) + 1);
+                strcpy(nameBasics->primeProfession[i], subtoken);
             }
         }
+        
+        copy = strdup(k_token);
+        //printf("here 4\n");
+        printf("known for titles token: %s\n", copy);
+        subtoken = strtok(copy, ",");
+        nameBasics->knownForTitles[0] = malloc(strlen(subtoken) + 1);
+        strcpy(nameBasics->knownForTitles[0], subtoken);
+        printf("subtoken 0: %s\n", subtoken);
+        
+        for(int i = 1; i <=3; i++)
+        {
+            subtoken = strtok(NULL, ",");
+            if(subtoken == NULL)
+            {
+                break;
+            }
+            else
+            {
+                printf("subtoken %d: %s\n", i, subtoken);
+                nameBasics->knownForTitles[i] = malloc(strlen(subtoken) + 1);
+                strcpy(nameBasics->knownForTitles[i], subtoken);
+            }
+        }
+        
         nameBasics->size++;
         
         if(feof(fptr))
@@ -643,9 +696,24 @@ void welcomeMenu()
         {
             printf("Incorrect Input. Enter a letter A-B. Try Again\n\n");
         }
-    }while(input == 'a' && input == 'b');
+    }while(input != 'a' && input != 'b');
     initialMenu();
 }
+
+void newUserMenu()
+{
+    
+}
+
+void loginMenu()
+{
+    char input;
+    printf("\nUSERNAME:\n\n ");
+    scanf("%c",&input);
+    scanf("%c",&input);
+    
+}
+
 void initialMenu()
 {
     char input;
@@ -675,7 +743,7 @@ void initialMenu()
         }
         else
         {
-            printf("Incorrect Input. Enter a letter A-D. Try Again\n");
+            printf("Incorrect Input. Enter a letter A-D. Try Again\n\n");
         }
     }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
            &&input != 'e' && input != 'f' && input != 'g');
@@ -723,7 +791,7 @@ void createMenu()
         }
         else
         {
-            printf("Incorrect Input. Try Again.\n");
+            printf("Incorrect Input. Enter a letter A-G. Try Again.\n\n");
         }
     }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
            &&input != 'e' && input != 'f' && input != 'g');
@@ -789,7 +857,7 @@ void retrieveMenu()
         }
         else
         {
-            printf("Incorrect Input. Try Again.\n");
+            printf("Incorrect Input. Enter a letter A-G. Try Again.\n\n");
             
         }
     }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
@@ -839,7 +907,7 @@ void updateMenu()
         }
         else
         {
-            printf("Incorrect Input. Try Again.\n");
+            printf("Incorrect Input. Enter a letter A-G. Try Again.\n");
             
         }
     }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
@@ -889,7 +957,7 @@ void deleteMenu()
         }
         else
         {
-            printf("Incorrect Input. Try Again.\n");
+            printf("Incorrect Input. Enter a letter A-G. Try Again.\n");
         }
     }while(input != 'a' && input != 'b' && input != 'c' &&
            input != 'd' && input != 'e' && input != 'f' && input != 'g');
