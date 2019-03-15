@@ -7,10 +7,8 @@
 #include <stdio.h>
 #include "readFiles.h"
 
-typedef struct BSTree TreeNode;
-
+void newUser(char *username, char *password);
 //Constructor
-TreeNode *newTree();
 //Storing the data
 //extern void basicBSTInsert(void *node, int size);
 /*void basicBSTInsert(TAlt *altTitleNode, TBasic *basicTitleNode,

@@ -11,20 +11,14 @@
 #include "readFiles.h"
 #include "storeData.h"
 
-struct BSTree
+
+void newUser(char *username, char *password)
 {
-    void *tNode;
-    void *left, *right;
-};
-TreeNode *newTree()
-{
-    TreeNode *tree = malloc(sizeof(TreeNode));
-    tree->tNode = NULL;
-    tree->left = NULL;
-    tree->right = NULL;
+    FILE *fptr = fopen("UserInfo.txt", "a");
+    fprintf(fptr, "%s %s\n", username, password);
     
-    return tree;
     
+    fclose(fptr);
 }
 /*void basicBSTInsert(TAlt *altTitleNode, TBasic *basicTitleNode,
                     TExecs *execsNode, TEpisode *episodeNode,

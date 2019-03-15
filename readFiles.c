@@ -686,31 +686,90 @@ void welcomeMenu()
         input = tolower(input);
         if(input == 'a')
         {
-            //newUserMenu();
+            newUserMenu();
         }
         else if(input == 'b')
         {
-            //loginMenu();
+            loginMenu();
         }
         else
         {
             printf("Incorrect Input. Enter a letter A-B. Try Again\n\n");
         }
     }while(input != 'a' && input != 'b');
-    initialMenu();
 }
 
 void newUserMenu()
 {
+    char* username_input = malloc(sizeof(char*));
+    printf("\n\nWELCOME!!\n\n");
+    printf("Please create a username:\n");
+    scanf("%s", username_input);
+    username_input = strlwr(username_input);
     
+    char* password_input =  malloc(sizeof(char*));
+    printf("\n\nNow create a password (case sensitive):\n");
+    scanf("%s", password_input);
+
+    newUser(username_input, password_input);
+    
+    initialMenu();
 }
 
 void loginMenu()
 {
-    char input;
-    printf("\nUSERNAME:\n\n ");
-    scanf("%c",&input);
-    scanf("%c",&input);
+    int userandPasswordFound = 0;
+    do
+    {
+        char* username_input =  malloc(sizeof(char*));
+        printf("\nUSERNAME:\n\n");
+        scanf("%s",username_input);
+        username_input = strlwr(username_input);
+        char *password_input = malloc(sizeof(char*));
+        printf("\n\nPASSWORD:\n");
+        scanf("%s", password_input);
+        
+        FILE* fptr = fopen("UserInfo.txt", "r");
+        char *line = malloc(sizeof(char *));
+        int lineSize = 1024;
+        int onlyUsernameIsFound = 0;
+        int userandPasswordFound = 0;
+        //fgets(line, lineSize, fptr);
+        while (fgets(line, lineSize, fptr) != NULL)
+        {
+            char *copy = strdup(line);
+            
+            //remove the newline character
+            copy[strlen(copy)-1] = 0;
+            char *user_token = strtok(copy, " ");
+            char *password_token = strtok(NULL, " ");
+
+            if(strcmp(username_input, user_token) == 0 &&
+               strcmp(password_input, password_token) == 0)
+            {
+                userandPasswordFound = 1;
+                break;
+            }
+            if(strcmp(username_input, user_token) == 0 &&
+               strcmp(password_input, password_token) != 0)
+            {
+                onlyUsernameIsFound = 1;
+            }
+        }
+        if(userandPasswordFound == 1)
+        {
+            printf("USER FOUND!!\n\n");
+            initialMenu();
+        }
+        else if(onlyUsernameIsFound == 1)
+        {
+            printf("INCORRECT PASSWORD. TRY AGAIN\n\n");
+        }
+        else
+        {
+            printf("INCORRECT USERNAME AND PASSWORD. TRY AGAIN\n\n");
+        }
+    }while(userandPasswordFound != 1);
     
 }
 
@@ -961,6 +1020,16 @@ void deleteMenu()
         }
     }while(input != 'a' && input != 'b' && input != 'c' &&
            input != 'd' && input != 'e' && input != 'f' && input != 'g');
+}
+
+char *strlwr(char *str)
+{
+    int size = strlen(str);
+    for(int i = 0; i < size; i++)
+    {
+        str[i] = tolower(str[i]);
+    }
+    return str;
 }
 
 int main()
