@@ -13,93 +13,6 @@
 #include "readFiles.h"
 #include "storeData.h"
 
-//contains information for alternative (AKA) titles (all the different languages)
-struct title_alternative
-{
-	char *ID;       // an alphanumeric unique identifier of the title
-	int ordering;        // a number to uniquely ID rows for a given titleID
-	char *title;         //the localized title
-	char *region;        //the region for this version of the title
-	char *language;		   //the language of the title
-	char *type;          // enumerated set of attributes for the alternative title
-	char *altAttributes; //an array of alternative attributes (if any)
-	int isOriginalTitle; // boolean --> 0: Not original 1: Original
-	int size;						 // number of rows in the file
-    TAlt *left, *right;
-};
-
-//contains basic information for titles
-struct title_basics
-{
-	char *ID;			      //unique identifier of the title
-	char *titleType;          //the type.format of the title (e.g. movie, short, tv series, etc)
-	char *primaryTitle;       //the more popular title
-	char *originalTitle;      //original title in the original language
-	int isAdult;							//boolean --> 0: non-adult title 1: adult title
-	char *startYear;				  //represents the release year of a title (or start year for TV series)
-	char *endYear;						//TV series end year (/N for all other title types)
-	int runtimeMinutes;				//primary runtime of the title in minutes
-	char **genres;						//includes up to three genres associated with the title
-	int size;									//number of rows in the file
-    TBasic *left, *right;
-};
-
-//contains the director and writer information for all the titles in IMDb
-struct title_execs
-{
-	char *ID;			//alphanumeric unique identifier of the title
-	char **directors;		//director(s) of the given title
-	char **writers;			//writer(s) of the given title
-	int size;						//number of rows in the file
-    TExecs *left, *right;
-};
-
-//contains the TV episode information
-struct title_episode
-{
-	char *ID;			      //alphanumeric identifier of the episode
-	char *titleID;			        //alphanumeric identifier of the parent title (tv series title ID)
-	int seasonNumber;						//season number of the episodeID
-	int episodeNumber;					//episode number of the episodeID
-	int size;										//number of rows in the file
-    TEpisode *left, *right;
-};
-
-//contains the principal cast/crew for titles
-struct title_crew
-{
-	char *ID;			 //alphanumeric unique identifier of the title
-	int ordering;				 //a number to uniquely ID rows for a given titleID
-	char *nameID;			   //alphanumeric unique identifier of the name/person
-	char *category;			 //category of job the person was had
-	char *job;					 //the specific job title the person had
-	char *characterName; //the name of the character played (/N if not applicable)
-	int size;						 //number of rows in the file
-    TCrew  *left, *right;
-};
-
-//contains the IMDb rating and votes information for the titles
-struct title_ratings
-{
-	char *ID;			      //alphanumeric unique identifier of the title
-	double avgRating;					//weighted average of all the user ratings
-	int numVotes;							//number of votes the title has received
-	int size;									//number of rows in the file
-    TRating *left, *right;
-};
-
-//contains the following information for names
-struct name_basics
-{
-	char *ID;				           //alphanumeric unique identifier of the name/person
-	char *primaryName;	           //name by which the person is most often credited
-	char *birthYear;						   //YYYY
-	char *deathYear;						   //YYYY (or /N if person is still alive)
-	char **primeProfession;        //top-3 professions of the person
-	char **knownForTitles;		     //array of titleIDs
-	int size;											 //number of rows in the file
-    NBasic *left, *right;
-};
 
 //Constructor for TAlt structure
 TAlt * newAltTitle()
@@ -116,6 +29,7 @@ TAlt * newAltTitle()
 	altTitle->size = 0;
     altTitle->left = NULL;
     altTitle->right = NULL;
+    altTitle->next = NULL;
     
 
 	return altTitle;
@@ -138,6 +52,7 @@ TBasic *newTitleBasics()
 	titleBasics->size = 0;
     titleBasics->left = NULL;
     titleBasics->right = NULL;
+    titleBasics->next = NULL;
 
 	return titleBasics;
 }
@@ -153,6 +68,7 @@ TExecs *newTitleExecs()
 	execs->size = 0;
     execs->left = NULL;
     execs->right = NULL;
+    execs->next = NULL;
 
 	return execs;
 }
@@ -169,6 +85,7 @@ TEpisode *newTitleEpisode()
 	episode->size = 0;
     episode->left = NULL;
     episode->right = NULL;
+    episode->next = NULL;
 
 	return episode;
 }
@@ -187,6 +104,7 @@ TCrew *newTitleCrew()
 	crew->size = 0;
     crew->left = NULL;
     crew->right = NULL;
+    crew->next = NULL;
 
 	return crew;
 }
@@ -202,6 +120,7 @@ TRating *newTitleRating()
 	rating->size = 0;
     rating->left = NULL;
     rating->right = NULL;
+    rating->next = NULL;
 
 	return rating;
 }
@@ -220,6 +139,7 @@ NBasic *newNameBasics()
 	nameBasics->size = 0;
     nameBasics->left = NULL;
     nameBasics->right = NULL;
+    nameBasics->next = NULL;
 
 	return nameBasics;
 }
@@ -271,6 +191,8 @@ TAlt* readAltTitlesFile(TAlt *altTitle)
         
         token = strtok(NULL, tab);
         altTitle->isOriginalTitle = atoi(token);
+        
+        TAltDataBST(altTitle, altTitle->size);
 
 		altTitle->size++;
 
@@ -350,13 +272,17 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
                 strcpy(titleBasics->genres[i], subtoken);
             }
         }
-
+        
+        TBasicDataBST(titleBasics, titleBasics->size);
+        
 		titleBasics->size++;
 
 		if(feof(fptr))
 		{
 			break;
 		}
+        
+        
 	}
 
 	fclose(fptr);
@@ -435,15 +361,15 @@ TExecs *readTitleExecsFile(TExecs *execs)
                 strcpy(execs->writers[i], subtoken);
             }
         }
-		
+		TExecsDataBST(execs, execs->size);
         //printf("HERE!\n");
 		execs->size++;
-
+        
 		if(feof(fptr))
 		{
 			break;
 		}
-
+        
 	}
 
 	fclose(fptr);
@@ -673,371 +599,4 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
     fclose(fptr);
     return nameBasics;
 }
-void welcomeMenu()
-{
-    char input;
-    
-    do
-    {
-        printf("\n\nWELCOME TO THE MOVIE DATABASE! \n\n");
-        printf("Please select one of the following choices:\n");
-        printf(" A. Create a new user account\n B. Login\n");
-        scanf("%c",&input);
-        input = tolower(input);
-        if(input == 'a')
-        {
-            newUserMenu();
-        }
-        else if(input == 'b')
-        {
-            loginMenu();
-        }
-        else
-        {
-            printf("Incorrect Input. Enter a letter A-B. Try Again\n\n");
-        }
-    }while(input != 'a' && input != 'b');
-}
-
-void newUserMenu()
-{
-    char* username_input = malloc(sizeof(char*));
-    printf("\n\nWELCOME!!\n\n");
-    printf("Please create a username:\n");
-    scanf("%s", username_input);
-    username_input = strlwr(username_input);
-    
-    char* password_input =  malloc(sizeof(char*));
-    printf("\n\nNow create a password (case sensitive):\n");
-    scanf("%s", password_input);
-
-    newUser(username_input, password_input);
-    
-    initialMenu();
-}
-
-void loginMenu()
-{
-    int userandPasswordFound = 0;
-    do
-    {
-        char* username_input =  malloc(sizeof(char*));
-        printf("\nUSERNAME:\n\n");
-        scanf("%s",username_input);
-        username_input = strlwr(username_input);
-        char *password_input = malloc(sizeof(char*));
-        printf("\n\nPASSWORD:\n");
-        scanf("%s", password_input);
-        
-        FILE* fptr = fopen("UserInfo.txt", "r");
-        char *line = malloc(sizeof(char *));
-        int lineSize = 1024;
-        int onlyUsernameIsFound = 0;
-        int userandPasswordFound = 0;
-        //fgets(line, lineSize, fptr);
-        while (fgets(line, lineSize, fptr) != NULL)
-        {
-            char *copy = strdup(line);
-            
-            //remove the newline character
-            copy[strlen(copy)-1] = 0;
-            char *user_token = strtok(copy, " ");
-            char *password_token = strtok(NULL, " ");
-
-            if(strcmp(username_input, user_token) == 0 &&
-               strcmp(password_input, password_token) == 0)
-            {
-                userandPasswordFound = 1;
-                break;
-            }
-            if(strcmp(username_input, user_token) == 0 &&
-               strcmp(password_input, password_token) != 0)
-            {
-                onlyUsernameIsFound = 1;
-            }
-        }
-        if(userandPasswordFound == 1)
-        {
-            printf("USER FOUND!!\n\n");
-            initialMenu();
-        }
-        else if(onlyUsernameIsFound == 1)
-        {
-            printf("INCORRECT PASSWORD. TRY AGAIN\n\n");
-        }
-        else
-        {
-            printf("INCORRECT USERNAME AND PASSWORD. TRY AGAIN\n\n");
-        }
-    }while(userandPasswordFound != 1);
-    
-}
-
-void initialMenu()
-{
-    char input;
-    do
-    {
-        printf("Would you like to: \n A. Create a record \n"
-               " B. Retrieve a record \n C. Update a record \n"
-               " D. Delete a record\n" );
-        scanf("%c",&input);
-        scanf("%c",&input);
-        input = tolower(input);
-        if(input == 'a')
-        {
-            createMenu();
-        }
-        else if(input == 'b')
-        {
-            retrieveMenu();
-        }
-        else if(input == 'c')
-        {
-            updateMenu();
-        }
-        else if(input == 'd')
-        {
-            deleteMenu();
-        }
-        else
-        {
-            printf("Incorrect Input. Enter a letter A-D. Try Again\n\n");
-        }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
-           &&input != 'e' && input != 'f' && input != 'g');
-    
-}
-void createMenu()
-{
-    char input;
-    do
-    {
-        printf("What type of record would you like to create? \n"
-               " A. Alternative Titles \n B. Basic Title Info \n"
-               " C. Directors/Writers \n D. Episode Info \n"
-               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
-        scanf("%c",&input);
-        scanf("%c",&input);
-        input = tolower(input);
-        if(input == 'a')
-        {
-            
-        }
-        else if(input == 'b')
-        {
-            
-        }
-        else if(input == 'c')
-        {
-            
-        }
-        else if(input == 'd')
-        {
-            
-        }
-        else if(input == 'e')
-        {
-            
-        }
-        else if(input == 'f')
-        {
-            
-        }
-        else if(input == 'g')
-        {
-            
-        }
-        else
-        {
-            printf("Incorrect Input. Enter a letter A-G. Try Again.\n\n");
-        }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
-           &&input != 'e' && input != 'f' && input != 'g');
-}
-void retrieveMenu()
-{
-    char input;
-    do
-    {
-        printf("What type of data would you like to retrieve? \n"
-               " A. Alternative Titles \n B. Basic Title Info \n"
-               " C. Directors/Writers \n D. Episode Info \n"
-               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
-        scanf("%c",&input);
-        scanf("%c",&input);
-        input = tolower(input);
-        if(input == 'a')
-        {
-            TAlt *alt = newAltTitle();
-            alt = readAltTitlesFile(alt);
-            printf("Alt Size: %d\n", alt->size);
-        }
-        else if(input == 'b')
-        {
-            TBasic *tBasic = newTitleBasics();
-            tBasic = readTitleBasicsFile(tBasic);
-            printf("TBasic Size: %d\n", tBasic->size);
-            
-        }
-        else if(input == 'c')
-        {
-            TExecs *execs = newTitleExecs();
-            execs = readTitleExecsFile(execs);
-            printf("Exec Size: %d\n", execs->size);
-            
-        }
-        else if(input == 'd')
-        {
-            TEpisode *episode = newTitleEpisode();
-            episode = readTitleEpisodeFile(episode);
-            printf("Episode Size: %d\n", episode->size);
-            
-        }
-        else if(input == 'e')
-        {
-            TCrew *crew = newTitleCrew();
-            crew = readTitleCrewFile(crew);
-            printf("Crew Size: %d\n", crew->size);
-            
-        }
-        else if(input == 'f')
-        {
-            TRating *rating = newTitleRating();
-            rating = readTitleRatingFile(rating);
-            printf("Rating Size: %d\n", rating->size);
-            
-        }
-        else if(input == 'g')
-        {
-            NBasic *nameBasics = newNameBasics();
-            nameBasics = readNameBasicsFile(nameBasics);
-            printf("NBasic Size: %d\n", nameBasics->size);
-        }
-        else
-        {
-            printf("Incorrect Input. Enter a letter A-G. Try Again.\n\n");
-            
-        }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
-           &&input != 'e' && input != 'f' && input != 'g');
-}
-
-void updateMenu()
-{
-    char input;
-    do
-    {
-        printf("What type of data would you like to update? \n"
-               " A. Alternative Titles \n B. Basic Title Info \n"
-               " C. Directors/Writers \n D. Episode Info \n"
-               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
-        scanf("%c",&input);
-        scanf("%c",&input);
-        input = tolower(input);
-        
-        if(input == 'a')
-        {
-            
-        }
-        else if(input == 'b')
-        {
-            
-        }
-        else if(input == 'c')
-        {
-            
-        }
-        else if(input == 'd')
-        {
-            
-        }
-        else if(input == 'e')
-        {
-            
-        }
-        else if(input == 'f')
-        {
-            
-        }
-        else if(input == 'g')
-        {
-            
-        }
-        else
-        {
-            printf("Incorrect Input. Enter a letter A-G. Try Again.\n");
-            
-        }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
-           &&input != 'e' && input != 'f' && input != 'g');
-}
-
-void deleteMenu()
-{
-    char input;
-    do
-    {
-        printf("What type of data would you like to delete? \n"
-               " A. Alternative Titles \n B. Basic Title Info \n"
-               " C. Directors/Writers \n D. Episode Info \n"
-               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
-        scanf("%c",&input);
-        scanf("%c",&input);
-        input = tolower(input);
-        
-        if(input == 'a')
-        {
-            
-        }
-        else if(input == 'b')
-        {
-            
-        }
-        else if(input == 'c')
-        {
-            
-        }
-        else if(input == 'd')
-        {
-            
-        }
-        else if(input == 'e')
-        {
-            
-        }
-        else if(input == 'f')
-        {
-            
-        }
-        else if(input == 'g')
-        {
-            
-        }
-        else
-        {
-            printf("Incorrect Input. Enter a letter A-G. Try Again.\n");
-        }
-    }while(input != 'a' && input != 'b' && input != 'c' &&
-           input != 'd' && input != 'e' && input != 'f' && input != 'g');
-}
-
-char *strlwr(char *str)
-{
-    int size = strlen(str);
-    for(int i = 0; i < size; i++)
-    {
-        str[i] = tolower(str[i]);
-    }
-    return str;
-}
-
-int main()
-{
-    welcomeMenu();
-    return 0;
-}
-
-
-
 

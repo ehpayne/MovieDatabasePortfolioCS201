@@ -7,12 +7,27 @@
 #include <stdio.h>
 #include "readFiles.h"
 
+typedef struct HashTable HTable;
+
+//trees for storing structures
+extern void TAltDataBST(TAlt* alt, int size);
+extern void TBasicDataBST(TBasic* titleBasicsNode, int size);
+extern void TExecsDataBST(TExecs* execsNode, int size);
+
+//hash table/function
+extern HTable *newTable();
+extern void hashTable(char *ID, char* key);
+extern int hashFunction(char *ID, char *key);
+extern void resizeTable(HTable *table);
+
+//storing user data
 void newUser(char *username, char *password);
-//Constructor
-//Storing the data
-//extern void basicBSTInsert(void *node, int size);
-/*void basicBSTInsert(TAlt *altTitleNode, TBasic *basicTitleNode,
-                    TExecs *execsNode, TEpisode *episodeNode,
-                    TCrew *crewNode, TRating *ratingNode,
-                    NBasic *basicNameNode, int size)
-*/
+
+
+struct HashTable
+{
+    int capacity;
+    int size;
+    char *ID;
+    char *key;
+};
