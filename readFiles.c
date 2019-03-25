@@ -255,6 +255,7 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
         token = strtok(NULL, tab);
         copy = strdup(token);
         
+        //parse the genre token by commas (there can be 0-3 genres
         char* subtoken = strtok(copy, ",");
         titleBasics->genres[0] = malloc(strlen(subtoken) + 1);
         strcpy(titleBasics->genres[0], subtoken);
@@ -273,8 +274,10 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
             }
         }
         
+        //store the record into a BST
         TBasicDataBST(titleBasics, titleBasics->size);
         
+        //increase size
 		titleBasics->size++;
 
 		if(feof(fptr))
@@ -282,13 +285,14 @@ TBasic *readTitleBasicsFile(TBasic *titleBasics)
 			break;
 		}
         
-        
 	}
-
+    //close file
 	fclose(fptr);
 	return titleBasics;
 }
 
+//reads in the title.crew TSV file and assigns the information to the
+//corresponding variable
 TExecs *readTitleExecsFile(TExecs *execs)
 {
 	char *line = malloc(sizeof(char *));
@@ -302,8 +306,10 @@ TExecs *readTitleExecsFile(TExecs *execs)
 	{
 		perror("Error: ");
 	}
+    //get the header line (useless data)
 	fgets(line, lineSize, fptr);
 	
+    //while !EOF get a line and parse the data based on tabs
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
         char *copy = strdup(line);
@@ -315,7 +321,7 @@ TExecs *readTitleExecsFile(TExecs *execs)
         char *w_token = strtok(NULL, tab);
         
         copy = strdup(d_token);
-        
+        //parse the director token based on commas
         //printf("directors token: %s\n", copy);
         char* subtoken = strtok(copy, ",");
         execs->directors[0] = malloc(strlen(subtoken) + 1);
@@ -340,6 +346,7 @@ TExecs *readTitleExecsFile(TExecs *execs)
         }
 
         copy = strdup(w_token);
+        //parse the writers token based on commas
         //printf("here 4\n");
         //printf("writers token: %s\n", copy);
         subtoken = strtok(copy, ",");
@@ -361,8 +368,10 @@ TExecs *readTitleExecsFile(TExecs *execs)
                 strcpy(execs->writers[i], subtoken);
             }
         }
+        //store the record in a BST
 		TExecsDataBST(execs, execs->size);
         //printf("HERE!\n");
+        //increase size
 		execs->size++;
         
 		if(feof(fptr))
@@ -371,11 +380,12 @@ TExecs *readTitleExecsFile(TExecs *execs)
 		}
         
 	}
-
+    //close the file
 	fclose(fptr);
 	return execs;
 }
-
+//reads in the title.episode TSV file and assigns the information to the
+//corresponding variable
 TEpisode *readTitleEpisodeFile(TEpisode *episode)
 {
 	char *line = malloc(sizeof(char *));
@@ -389,8 +399,11 @@ TEpisode *readTitleEpisodeFile(TEpisode *episode)
 	{
 		perror("Error: ");
 	}
+    //get the header line (not used)
 	fgets(line, lineSize, fptr);
 	//printf("line:%s\n", line);
+    
+    //while !EOF, get a line and parse the data based on tabs
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
         char *copy = strdup(line);
@@ -407,6 +420,10 @@ TEpisode *readTitleEpisodeFile(TEpisode *episode)
         token = strtok(copy, tab);
         episode->episodeNumber = atoi(token);
 
+        //store the record in a BST
+        //TEpisodeDataBST(episode, episode->size);
+        
+        //increase the size
 		episode->size++;
 
 		if(feof(fptr))
@@ -414,11 +431,12 @@ TEpisode *readTitleEpisodeFile(TEpisode *episode)
 			break;
 		}
 	}
-
+    //close the file
 	fclose(fptr);
 	return episode;
 }
-
+//reads in the title.principals TSV file and assigns the information to the
+//corresponding variable
 TCrew *readTitleCrewFile(TCrew *crew)
 {
 	char *line = malloc(sizeof(char *));
@@ -432,8 +450,10 @@ TCrew *readTitleCrewFile(TCrew *crew)
 	{
 		perror("Error: ");
 	}
+    //get the header line (not used)
 	fgets(line, lineSize, fptr);
 	
+    //while !EOF, get a line and parse the data based on the tabs
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
         char *copy = strdup(line);
@@ -453,6 +473,10 @@ TCrew *readTitleCrewFile(TCrew *crew)
         token = strtok(copy, tab);
         crew->characterName = token;
         
+        //Store the data in a BST
+        //TCrewDataBST(crew, crew->size);
+        
+        //increase size
 		crew->size++;
 
 		if(feof(fptr))
@@ -460,11 +484,12 @@ TCrew *readTitleCrewFile(TCrew *crew)
 			break;
 		}
 	}
-
+    //close the file
 	fclose(fptr);
 	return crew;
 }
-
+//reads in the title.ratings TSV file and assigns the information to the
+//corresponding variable
 TRating *readTitleRatingFile(TRating *rating)
 {
     
@@ -479,8 +504,10 @@ TRating *readTitleRatingFile(TRating *rating)
     {
         perror("Error: ");
     }
+    //get the header line (not used)
     fgets(line, lineSize, fptr);
-    //printf("line:%s\n", line);
+    
+    //while !EOF, get a line and parse the data based on tabs
     while (fgets(line, lineSize, fptr) != NULL)
     {
         char *copy = strdup(line);
@@ -494,6 +521,10 @@ TRating *readTitleRatingFile(TRating *rating)
         token = strtok(copy, tab);
         rating->numVotes = atoi(token);
         
+        //store the record in a BST
+        //TRatingDataBST(rating, rating->size);
+        
+        //increase the size
         rating->size++;
         
         if(feof(fptr))
@@ -501,11 +532,12 @@ TRating *readTitleRatingFile(TRating *rating)
             break;
         }
     }
-    
+    //close the file
     fclose(fptr);
     return rating;
 }
-
+//reads in the name.basics TSV file and assigns the information to the
+//corresponding variable
 NBasic *readNameBasicsFile(NBasic *nameBasics)
 {
     char *line = malloc(sizeof(char *));
@@ -519,8 +551,10 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
     {
         perror("Error: ");
     }
+    //get the header line (not used)
     fgets(line, lineSize, fptr);
     
+    //while !EOF, get a line and parse the data based on tabs
     while (fgets(line, lineSize, fptr) != NULL)
     {
         char *copy = strdup(line);
@@ -542,7 +576,8 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
         
         copy = strdup(p_token);
         
-        //printf("directors token: %s\n", copy);
+        //parse the profession token by commas (there can be 1-3 professions)
+        //printf("profession token: %s\n", copy);
         char* subtoken = strtok(copy, ",");
         nameBasics->primeProfession[0] = malloc(strlen(subtoken) + 1);
         strcpy(nameBasics->primeProfession[0], subtoken);
@@ -566,6 +601,8 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
         }
         
         copy = strdup(k_token);
+        
+        //parse the "known for titles" token based on commas (there can be 1-4)
         //printf("here 4\n");
         printf("known for titles token: %s\n", copy);
         subtoken = strtok(copy, ",");
@@ -587,7 +624,10 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
                 strcpy(nameBasics->knownForTitles[i], subtoken);
             }
         }
+        //Store the record in a BST
+        //NBasicDataBST(nameBasics, nameBasics->size);
         
+        //increase size
         nameBasics->size++;
         
         if(feof(fptr))
@@ -595,7 +635,7 @@ NBasic *readNameBasicsFile(NBasic *nameBasics)
             break;
         }
     }
-    
+    //close file
     fclose(fptr);
     return nameBasics;
 }

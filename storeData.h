@@ -16,7 +16,7 @@ extern void TExecsDataBST(TExecs* execsNode, int size);
 
 //hash table/function
 extern HTable *newTable();
-extern void hashTable(char *ID, char* key);
+extern void hashTable(char *ID, char* key, int size);
 extern int hashFunction(char *ID, char *key);
 extern void resizeTable(HTable *table);
 

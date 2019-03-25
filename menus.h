@@ -9,11 +9,12 @@
 extern void welcomeMenu();
 extern void newUserMenu();
 extern void loginMenu();
-extern void initialMenu();
-extern void createMenu();
+extern void initialMenu(char *username);
+extern void createMenu(char *username);
 extern void retrieveMenu();
 extern void updateMenu();
 extern void deleteMenu();
 
+//manipulate strings
 extern char *strlwr(char *str);
-extern int matchStrings(char *input, char *str);
+extern char *appendFilename(char *str);
