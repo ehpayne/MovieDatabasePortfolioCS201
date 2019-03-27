@@ -95,6 +95,26 @@ void loginMenu()
         
         //search for the username or password in the UserInfo.txt file
         FILE* fptr = fopen("UserInfo.txt", "r");
+        if(fptr == NULL)
+        {
+            printf("\n\nThere are no users. You must create a new user to proceed\n\n");
+            printf("Please create a username:\n");
+            scanf("%c",&temp); //clear buffer by storing it into temp
+            scanf("%[^\n]",username_input);
+            username_input = strlwr(username_input);
+            
+            char* password_input =  malloc(sizeof(char*));
+            printf("\n\nNow create a password (case sensitive):\n");
+            scanf("%c",&temp); //clear buffer by storing it into temp
+            scanf("%[^\n]",password_input);
+            
+            newUser(username_input, password_input);
+            
+            printf("\n\nUSER CREATED\n\n");
+            system("clear");
+            printf("\n\nWELCOME NEW USER!\n\n");
+            initialMenu(username_input);
+        }
         char *line = malloc(sizeof(char *));
         int lineSize = 1024;
         int onlyUsernameIsFound = 0; //FALSE
@@ -293,52 +313,36 @@ void retrieveMenu()
         input = tolower(input);
         if(input == 'a')
         {
-            TAlt *alt = newAltTitle();
-            alt = readAltTitlesFile(alt);
-            printf("Alt Size: %d\n", alt->size);
-            
-            //storeAltTitleData(alt, alt->size);
+            readAltTitlesFile();
         }
         else if(input == 'b')
         {
-            TBasic *tBasic = newTitleBasics();
-            tBasic = readTitleBasicsFile(tBasic);
-            printf("TBasic Size: %d\n", tBasic->size);
+            readTitleBasicsFile();
             
         }
         else if(input == 'c')
         {
-            TExecs *execs = newTitleExecs();
-            execs = readTitleExecsFile(execs);
-            printf("Exec Size: %d\n", execs->size);
+            readTitleExecsFile();
             
         }
         else if(input == 'd')
         {
-            TEpisode *episode = newTitleEpisode();
-            episode = readTitleEpisodeFile(episode);
-            printf("Episode Size: %d\n", episode->size);
+            readTitleEpisodeFile();
             
         }
         else if(input == 'e')
         {
-            TCrew *crew = newTitleCrew();
-            crew = readTitleCrewFile(crew);
-            printf("Crew Size: %d\n", crew->size);
+            readTitleCrewFile();
             
         }
         else if(input == 'f')
         {
-            TRating *rating = newTitleRating();
-            rating = readTitleRatingFile(rating);
-            printf("Rating Size: %d\n", rating->size);
+            readTitleRatingFile();
             
         }
         else if(input == 'g')
         {
-            NBasic *nameBasics = newNameBasics();
-            nameBasics = readNameBasicsFile(nameBasics);
-            printf("NBasic Size: %d\n", nameBasics->size);
+            readNameBasicsFile();
         }
         else
         {

@@ -15,7 +15,7 @@ TAlt *tAltRoot;
 TBasic *tBasicsRoot;
 TExecs *tExecsRoot;
 
-int defaultCapacity = 1000;
+
 
 //newUser creates a file containing all usernames and passwords
 void newUser(char *username, char *password)
@@ -75,6 +75,7 @@ void TAltDataBST(TAlt* altTitleNode, int size)
             else
             {
                 //linked list for duplicates
+                printf("A: %s, T:%s\n\n", altTitleNode->ID, temp->ID);
                 temp = temp->next;
                 printf("going next\n");
             }
@@ -86,6 +87,7 @@ void TAltDataBST(TAlt* altTitleNode, int size)
         }
         else
         {
+            back = altTitleNode->parent;
             //if new node < back, attach new node to the left
             if(strcmp(altTitleNode->ID, back->ID) < 0)
             {
@@ -112,20 +114,25 @@ void TAltDataBST(TAlt* altTitleNode, int size)
 //linked list
 void TBasicDataBST(TBasic* titleBasicsNode, int size)
 {
-    printf("ID: %s\n", titleBasicsNode->ID);
+    printf("HERE 5\n");
+    printf("size: %d\n", size);
     if(size == 0)
     {
-        printf("root\n");
         tBasicsRoot = titleBasicsNode;
+        
+        printf("root: %s\n", tBasicsRoot->ID);
     }
     else
     {
         TBasic *temp = tBasicsRoot;
+        printf("Root = %s\n", tBasicsRoot->ID);
+        printf("Temp = %s\n", temp->ID);
         TBasic *back = NULL;
-        
+        printf("A: %s, T:%s\n\n", titleBasicsNode->ID, temp->ID);
         //walk through the tree to find where the new node should go
         while(temp != NULL)
         {
+            
             back = temp;
             //if new node < temp, go left
             if(strcmp(titleBasicsNode->ID, temp->ID) < 0)
@@ -148,32 +155,30 @@ void TBasicDataBST(TBasic* titleBasicsNode, int size)
             }
             
         }
-        if(back == NULL)
+        //set the node's parent
+        //printf("Back->ID = %s\n", back->ID);
+        //attach new node to correct place
+        //if new node < back, attach the new node to the left
+        if(strcmp(titleBasicsNode->ID, back->ID) < 0)
         {
-            tBasicsRoot = titleBasicsNode;
+            //back = titleBasicsNode->parent;
+            back->left = titleBasicsNode;
+            printf("ID: %s inserted LEFT\n", titleBasicsNode->ID);
         }
+        //if the new node > back, attach the new node to the right
+        else if(strcmp(titleBasicsNode->ID, back->ID) > 0)
+        {
+             //back = titleBasicsNode->parent;
+            back->right = titleBasicsNode;
+            printf("ID: %s inserted RIGHT\n", titleBasicsNode->ID);
+                
+        }
+        //else attach the new node to the end of the linked list
         else
         {
-            //attach new node to correct place
-            //if new node < back, attach the new node to the left
-            if(strcmp(titleBasicsNode->ID, back->ID) < 0)
-            {
-                back->left = titleBasicsNode;
-                printf("ID: %s inserted LEFT\n", titleBasicsNode->ID);
-            }
-            //if the new node > back, attach the new node to the right
-            else if(strcmp(titleBasicsNode->ID, back->ID) > 0)
-            {
-                back->right = titleBasicsNode;
-                printf("ID: %s inserted RIGHT\n", titleBasicsNode->ID);
-                
-            }
-            //else attach the new node to the end of the linked list
-            else
-            {
-                back->next = titleBasicsNode;
-                printf("ID: %s is a duplicate\n", titleBasicsNode->ID);
-            }
+             back = titleBasicsNode->parent;
+            back->next = titleBasicsNode;
+            printf("ID: %s is a duplicate\n", titleBasicsNode->ID);
         }
     }
 }
@@ -223,6 +228,7 @@ void TExecsDataBST(TExecs* execsNode, int size)
         //attach the new node where it should go
         else
         {
+            back = execsNode->parent;
             //if new node < back, attach left
             if(strcmp(execsNode->ID, back->ID) < 0)
             {

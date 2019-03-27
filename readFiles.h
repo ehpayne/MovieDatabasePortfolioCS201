@@ -27,13 +27,13 @@ extern NBasic *newNameBasics();
 
 
 //Reading in files
-extern TAlt *readAltTitlesFile(TAlt *altTitle);
-extern TBasic *readTitleBasicsFile(TBasic *titleBasics);
-extern TExecs *readTitleExecsFile(TExecs *execs);
-extern TEpisode *readTitleEpisodeFile(TEpisode *episode);
-extern TCrew *readTitleCrewFile(TCrew *crew);
-extern TRating *readTitleRatingFile(TRating *rating);
-extern NBasic *readNameBasicsFile(NBasic *nameBasics);
+extern void readAltTitlesFile();
+extern void readTitleBasicsFile();
+extern void readTitleExecsFile();
+extern void readTitleEpisodeFile();
+extern void readTitleCrewFile();
+extern void readTitleRatingFile();
+extern void readNameBasicsFile();
 
 
 //contains information for alternative (AKA) titles (all the different languages)
@@ -48,7 +48,7 @@ struct title_alternative
     char *altAttributes; //an array of alternative attributes (if any)
     int isOriginalTitle; // boolean --> 0: Not original 1: Original
     int size;                         // number of rows in the file
-    TAlt *left, *right, *next;
+    TAlt *left, *right, *next, *parent;
 };
 
 //contains basic information for titles
@@ -63,8 +63,8 @@ struct title_basics
     char *endYear;                        //TV series end year (/N for all other title types)
     int runtimeMinutes;                //primary runtime of the title in minutes
     char **genres;                        //includes up to three genres associated with the title
-    int size;                                    //number of rows in the file
-    TBasic *left, *right, *next;
+    //int size;                                    //number of rows in the file
+    TBasic *left, *right, *next, *parent;
 };
 
 //contains the director and writer information for all the titles in IMDb
@@ -74,7 +74,7 @@ struct title_execs
     char **directors;        //director(s) of the given title
     char **writers;            //writer(s) of the given title
     int size;                        //number of rows in the file
-    TExecs *left, *right, *next;
+    TExecs *left, *right, *next, *parent;
 };
 
 //contains the TV episode information
@@ -85,7 +85,7 @@ struct title_episode
     int seasonNumber;                        //season number of the episodeID
     int episodeNumber;                    //episode number of the episodeID
     int size;                                        //number of rows in the file
-    TEpisode *left, *right, *next;
+    TEpisode *left, *right, *next, *parent;
 };
 
 //contains the principal cast/crew for titles
@@ -98,7 +98,7 @@ struct title_crew
     char *job;                     //the specific job title the person had
     char *characterName; //the name of the character played (/N if not applicable)
     int size;                         //number of rows in the file
-    TCrew  *left, *right, *next;
+    TCrew  *left, *right, *next, *parent;
 };
 
 //contains the IMDb rating and votes information for the titles
@@ -108,7 +108,7 @@ struct title_ratings
     double avgRating;                    //weighted average of all the user ratings
     int numVotes;                            //number of votes the title has received
     int size;                                    //number of rows in the file
-    TRating *left, *right, *next;
+    TRating *left, *right, *next, *parent;
 };
 
 //contains the following information for names
@@ -121,7 +121,7 @@ struct name_basics
     char **primeProfession;        //top-3 professions of the person
     char **knownForTitles;             //array of titleIDs
     int size;                                             //number of rows in the file
-    NBasic *left, *right, *next;
+    NBasic *left, *right, *next, *parent;
 };
 
 
