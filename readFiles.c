@@ -201,7 +201,7 @@ void readAltTitlesFile()
         token = strtok(NULL, tab);
         altTitle->isOriginalTitle = atoi(token);
         
-        TAltDataBST(altTitle, altTitle->size);
+        //TAltDataBST(altTitle, altTitle->size);
 
 		altTitle->size++;
 
@@ -221,7 +221,7 @@ void readTitleBasicsFile()
     TBasic *titleBasics = malloc(sizeof(TBasic));
     titleBasics->height = 0;
     titleBasics->balance = 0;
-    printf("HERE 1\n");
+    //printf("HERE 1\n");
     //TBasic *titleBasics;
     //TBasic *titleBasics = newTitleBasics(0);
     int size = 0;
@@ -229,7 +229,7 @@ void readTitleBasicsFile()
 	char *line = (char *)malloc(sizeof(char *));
     
 	char *tab = "\t";
-	int lineSize = 1024;
+	int lineSize = 3000;
 
     //open the file
 	FILE *fptr;
@@ -243,6 +243,7 @@ void readTitleBasicsFile()
     //while !EOF read a line and parse the data
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
+        
         //printf("line: %s\n", line);
         //titleBasics = newTitleBasics();
         char *copy = malloc(strlen(line)+1);
@@ -257,6 +258,11 @@ void readTitleBasicsFile()
         
         //Title Type
         token = strtok(NULL, tab);
+        if(strcmp(token, "tvEpisode") == 0)
+        {
+            //printf("SKIPPED EPISODE\n");
+            continue;
+        }
         //printf("Title Type: %s\n", token);
         strcpy(titleBasics->titleType, token);
         
@@ -326,11 +332,10 @@ void readTitleBasicsFile()
 		{
 			break;
 		}
-        //free(titleBasics);
 	}
     //close file
 	fclose(fptr);
-    //free(line);
+    free(line);
 }
 
 //reads in the title.crew TSV file and assigns the information to the
@@ -412,7 +417,7 @@ void readTitleExecsFile()
             }
         }
         //store the record in a BST
-		TExecsDataBST(execs, execs->size);
+		//TExecsDataBST(execs, execs->size);
         //printf("HERE!\n");
         //increase size
 		execs->size++;

@@ -41,74 +41,6 @@ void newUser(char *username, char *password)
     fclose (fptr2);
 }
 
-//TAltDataBST is a BST containing TAlt structures (duplicates are stored as a
-//linked list
-void TAltDataBST(TAlt* altTitleNode, int size)
-{
-    printf("ID: %s\n", altTitleNode->ID);
-    if(size == 0)
-    {
-        printf("root\n");
-        tAltRoot = altTitleNode;
-    }
-    else
-    {
-        TAlt *temp = tAltRoot;
-        TAlt *back = NULL;
-        
-        //walk through the tree to find where the new node should go
-        while(temp != NULL)
-        {
-            back = temp;
-            //if new node < temp, go left
-            if(strcmp(altTitleNode->ID, temp->ID) < 0)
-            {
-               temp = temp->left;
-                //printf("going left\n");
-            }
-            //if new node > temp, go right
-            else if(strcmp(altTitleNode->ID, temp->ID) > 0)
-            {
-                temp = temp->right;
-                //printf("going right\n");
-            }
-            else
-            {
-                //linked list for duplicates
-                //printf("A: %s, T:%s\n\n", altTitleNode->ID, temp->ID);
-                temp = temp->next;
-                //printf("going next\n");
-            }
-        }
-        //attach new node to correct place
-        if(back == NULL)
-        {
-            tAltRoot = altTitleNode;
-        }
-        else
-        {
-            back = altTitleNode->parent;
-            //if new node < back, attach new node to the left
-            if(strcmp(altTitleNode->ID, back->ID) < 0)
-            {
-                back->left =altTitleNode;
-                //printf("ID: %s inserted LEFT\n", altTitleNode->ID);
-            }
-            //if new node > back, attach new node to the right
-            else if(strcmp(altTitleNode->ID, back->ID) > 0)
-            {
-                back->right = altTitleNode;
-                printf("ID: %s inserted RIGHT\n", altTitleNode->ID);
-            }
-            else
-            {
-                //attach new node to the end of the linked list
-                back->next = altTitleNode;
-                printf("ID: %s is a duplicate\n", altTitleNode->ID);
-            }
-        }
-    }
-}
 
 //TBasicDataBST is a BST containing TBAsic structures (duplicates are stored as a
 //linked list
@@ -119,7 +51,7 @@ void TBasicDataBST(TBasic* titleBasicsNode, int size)
     {
         tBasicsRoot = titleBasicsNode;
         
-        printf("root: %s\n", tBasicsRoot->ID);
+        //printf("root: %s\n", tBasicsRoot->ID);
     }
     else
     {
@@ -136,6 +68,7 @@ void TBasicDataBST(TBasic* titleBasicsNode, int size)
             if(temp->balance != 0)
             {
                 ancestor = temp;
+                //printf("ANCESTOR: %s\n\n", ancestor->ID);
             }
             //if new node < temp, go left
             if(strcmp(titleBasicsNode->ID, temp->ID) < 0)
@@ -147,14 +80,14 @@ void TBasicDataBST(TBasic* titleBasicsNode, int size)
             else if(strcmp(titleBasicsNode->ID, temp->ID) > 0)
             {
                 temp = temp->right;
-                printf("going right\n");
+                //printf("going right\n");
             }
             //else walk through the linked list
             else
             {
                 //linked list for duplicates
                 temp = temp->next;
-                //printf("going next\n");
+               // printf("going next\n");
             }
             
         }
@@ -165,100 +98,31 @@ void TBasicDataBST(TBasic* titleBasicsNode, int size)
         if(strcmp(titleBasicsNode->ID, back->ID) < 0)
         {
             back->left = titleBasicsNode;
-            printf("ID: %s inserted LEFT\n", titleBasicsNode->ID);
+            //printf("ID: %s inserted LEFT\n", titleBasicsNode->ID);
         }
         //if the new node > back, attach the new node to the right
         else if(strcmp(titleBasicsNode->ID, back->ID) > 0)
         {
            
             back->right = titleBasicsNode;
-            printf("ID: %s inserted RIGHT\n", titleBasicsNode->ID);
+            //printf("ID: %s inserted RIGHT\n", titleBasicsNode->ID);
         }
         //else attach the new node to the end of the linked list
         else
         {
-            back->next = titleBasicsNode;
             back = titleBasicsNode->parent;
-            printf("ID: %s is a duplicate\n", titleBasicsNode->ID);
+            //printf("ID: %s is a duplicate\n", titleBasicsNode->ID);
         }
         TBasic_RestoreAVL(ancestor, titleBasicsNode);
-        printf("ROOT: %s\n", tBasicsRoot->ID);
-        printf("NODE: %s\n", titleBasicsNode->ID);
-        printf("root->balance = %d, parent->balance = %d\n", tBasicsRoot->balance,
-               titleBasicsNode->parent->balance);
+       // printf("ROOT: %s\n", tBasicsRoot->ID);
+        //printf("NODE: %s\n", titleBasicsNode->ID);
+        //printf("root->balance = %d, parent->balance = %d\n", tBasicsRoot->balance,
+               //titleBasicsNode->parent->balance);
        
         
-        printf("DONE INSERTING\n\n");
+        //printf("DONE INSERTING %d\n\n", size);
         
         //Print(titleBasicsNode);
-    }
-}
-//TExecsDataBST is a BST containing TExecs structures (duplicates are stored as a
-//linked list
-void TExecsDataBST(TExecs* execsNode, int size)
-{
-    //printf("ID: %s\n", altTitleNode->ID);
-    if(size == 0)
-    {
-        printf("root\n");
-        tExecsRoot = execsNode;
-    }
-    else
-    {
-        TExecs *temp = tExecsRoot;
-        TExecs *back = NULL;
-        
-        //walk through the tree to find where the new node should go
-        while(temp != NULL)
-        {
-            back = temp;
-            //if new node < temp, go left
-            if(strcmp(execsNode->ID, temp->ID) < 0)
-            {
-                temp = temp->left;
-                printf("going left\n");
-            }
-            //if the new node > temp, go right
-            else if(strcmp(execsNode->ID, temp->ID) > 0)
-            {
-                temp = temp->right;
-                printf("going right\n");
-            }
-            //else, the new node is a duplicate; walk through the linked list
-            else
-            {
-                //linked list for duplicates
-                temp = temp->next;
-                printf("going next\n");
-            }
-        }
-        if(back == NULL)
-        {
-            tExecsRoot = execsNode;
-        }
-        //attach the new node where it should go
-        else
-        {
-            back = execsNode->parent;
-            //if new node < back, attach left
-            if(strcmp(execsNode->ID, back->ID) < 0)
-            {
-                back->left = execsNode;
-                printf("ID: %s inserted LEFT\n", execsNode->ID);
-            }
-            //if new node > back, attach right
-            else if(strcmp(execsNode->ID, back->ID) > 0)
-            {
-                back->right = execsNode;
-                printf("ID: %s inserted RIGHT\n", execsNode->ID);
-            }
-            //else, the node is a duplicate; attach to the end of the linked list
-            else
-            {
-                back->next = execsNode;
-                printf("ID: %s is a duplicate\n", execsNode->ID);
-            }
-        }
     }
 }
 
@@ -269,12 +133,12 @@ void TExecsDataBST(TExecs* execsNode, int size)
 // @param end– last node back up the tree that needs adjusting
 // @param start – node just inserted
 //------------------------------------------------------------------
-void adjusttBalancesTBasic(TBasic *end, TBasic *start)
+void adjustBalancesTBasic(TBasic *end, TBasic *start)
 {
     TBasic *temp = start->parent; // Set starting point at start's parent
     while(temp != end)
     {
-        if(start->ID < temp->ID)
+        if(strcmp(start->ID, temp->ID) < 0)
             temp->balance = 1;
         else
             temp->balance = -1;
@@ -285,17 +149,17 @@ void adjusttBalancesTBasic(TBasic *end, TBasic *start)
 //http://www.cs.uah.edu/~rcoleman/Common/CodeVault/Code/Code203_Tree.html
 void TBasic_RestoreAVL(TBasic *ancestor, TBasic *newNode)
 {
-    printf("in Restore\n");
+    //printf("in Restore\n");
     // Case 1: balance of all ancestors' is '0'
     if(ancestor == NULL)
     {
-        printf("case 1\n");
-        if(newNode->ID < tBasicsRoot->ID)       // newNode inserted to left of root
+        //printf("case 1\n");
+        if(strcmp(newNode->ID, tBasicsRoot->ID) < 0)       // newNode inserted to left of root
             tBasicsRoot->balance = 1;
         else
             tBasicsRoot->balance = -1;   // newNode inserted to right of root
         // Adjust the balance for all nodes from newNode back up to root
-        adjusttBalancesTBasic(tBasicsRoot, newNode);
+        adjustBalancesTBasic(tBasicsRoot, newNode);
     }
     
     // Case 2: Insertion in opposite subtree of ancestor's balance factor, i.e.
@@ -305,39 +169,39 @@ void TBasic_RestoreAVL(TBasic *ancestor, TBasic *newNode)
     else if(((ancestor->balance == 1) && (strcmp(newNode->ID, ancestor->ID) > 0)) ||
             ((ancestor->balance == -1) && (strcmp(newNode->ID, ancestor->ID) < 0)))
     {
-        printf("case 2\n");
+        //printf("case 2\n");
         ancestor->balance = 0;
         // Adjust the balance for all nodes from newNode back up to ancestor
-        adjusttBalancesTBasic(ancestor, newNode);
+        adjustBalancesTBasic(ancestor, newNode);
     }
     // Case 3: ancestor.balance = -1 and the node inserted is
     //      in the right subtree of ancestor's right child
     else if((ancestor->balance == -1) && (strcmp(newNode->ID, ancestor->right->ID) > 0))
     {
-        printf("case 3\n");
+        //printf("case 3\n");
 
         ancestor->balance = 0; // Reset ancestor's balance
         leftRotateTBasic(ancestor);       // Do single left rotation about ancestor
         // Adjust the balance for all nodes from newNode back up to ancestor's parent
-        adjusttBalancesTBasic(ancestor->parent, newNode);
+        // adjustBalancesTBasic(ancestor->parent, newNode);
     }
     
     // Case 4: ancestor.balance is 1 and the node inserted is
     //      in the left subtree of ancestor's left child
     else if((ancestor->balance == 1) && (strcmp(newNode->ID, ancestor->left->ID) < 0))
     {
-        printf("case 4\n");
+        //printf("case 4\n");
         ancestor->balance = 0; // Reset ancestor's balance
         rightRotateTBasic(ancestor);       // Do single right rotation about ancestor
         // Adjust the balance for all nodes from newNode back up to ancestor's parent
-        adjusttBalancesTBasic(ancestor->parent, newNode);
+        //adjustBalancesTBasic(ancestor->parent, newNode);
     }
     
     //Case 5: ancestor.balance is 1 and the node inserted is
     //      in the right subtree of ancestor's left child
     else if((ancestor->balance == 1) && (strcmp(newNode->ID, ancestor->left->ID) > 0))
     {
-        printf("case 5\n");
+        //printf("case 5\n");
 
         // Perform double rotation (left, then right)
         leftRotateTBasic(ancestor->left);
@@ -350,7 +214,7 @@ void TBasic_RestoreAVL(TBasic *ancestor, TBasic *newNode)
     //      in the left subtree of ancestor's right child
     else
     {
-        printf("case 6\n");
+        //printf("case 6\n");
 
         // Perform double rotation (right then left)
         rightRotateTBasic(ancestor->right);
@@ -362,7 +226,7 @@ void TBasic_RestoreAVL(TBasic *ancestor, TBasic *newNode)
 //http://www.cs.uah.edu/~rcoleman/Common/CodeVault/Code/Code203_Tree.html
 void rightRotateTBasic(TBasic *node)
 {
-    printf("ID: %s rotate RIGHT\n", node->ID);
+    //printf("ID: %s rotate RIGHT\n", node->ID);
     //pointer to node's right child
     TBasic *leftChild = node->left;
     node->left = leftChild->right;
@@ -392,7 +256,7 @@ void rightRotateTBasic(TBasic *node)
 //http://www.cs.uah.edu/~rcoleman/Common/CodeVault/Code/Code203_Tree.html
 void leftRotateTBasic(TBasic *node)
 {
-    printf("ID: %s rotate LEFT\n", node->ID);
+    //printf("ID: %s rotate LEFT\n", node->ID);
     //pointer to node's right child
     TBasic *rightChild = node->right;
     //node's right child pointer now points to rightChild's left child
@@ -412,11 +276,11 @@ void leftRotateTBasic(TBasic *node)
     //keep track of node's parent
     else if(node->parent->right == node)
     {
-        node->parent->right = node;
+        node->parent->right = rightChild;
     }
     else
     {
-        node->parent->left = node;
+        node->parent->left = rightChild;
     }
 }
 
@@ -434,13 +298,13 @@ void adjustLeftRightTBasic(TBasic *end, TBasic *start)
     else if(strcmp(start->ID, end->parent->ID) < 0)
     {
         end->balance = -1;
-        adjusttBalancesTBasic(end->parent->left, start);
+        adjustBalancesTBasic(end->parent->left, start);
     }
     else
     {
         end->balance = 0;
         end->parent->left->balance = 1;
-        adjusttBalancesTBasic(end, start);
+        adjustBalancesTBasic(end, start);
     }
 }
 
@@ -457,13 +321,13 @@ void adjustRightLeftTBasic(TBasic *end, TBasic *start)
     else if(strcmp(start->ID, end->parent->ID) > 0)
     {
         end->balance = 1;
-        adjusttBalancesTBasic(end->parent->right, start);
+        adjustBalancesTBasic(end->parent->right, start);
     }
     else
     {
         end->balance = 0;
         end->parent->right->balance = -1;
-        adjusttBalancesTBasic(end, start);
+        adjustBalancesTBasic(end, start);
     }
 }
 
