@@ -114,6 +114,8 @@ void TBasicDataBST(TBasic* titleBasicsNode, int size)
             //printf("ID: %s is a duplicate\n", titleBasicsNode->ID);
         }
         TBasic_RestoreAVL(ancestor, titleBasicsNode);
+        
+        //HASH FUNCTION
        // printf("ROOT: %s\n", tBasicsRoot->ID);
         //printf("NODE: %s\n", titleBasicsNode->ID);
         //printf("root->balance = %d, parent->balance = %d\n", tBasicsRoot->balance,

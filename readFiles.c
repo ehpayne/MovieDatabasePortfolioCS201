@@ -37,20 +37,26 @@ TAlt * newAltTitle()
 }
 
 //Constructor for TBasic structure
-TBasic *newTitleBasics(int height, int balance)
+TBasic *newTitleBasics(int balance)
 {
 	TBasic *titleBasics = malloc(sizeof(TBasic));
 
-	titleBasics->ID = (char*)malloc(sizeof(char*));
-	titleBasics->titleType = (char*)malloc(sizeof(char*));
-	titleBasics->primaryTitle = (char*)malloc(sizeof(char*));
-	titleBasics->originalTitle = (char*)malloc(sizeof(char*));
+	titleBasics->ID = malloc(sizeof(char*));
+	titleBasics->titleType = malloc(sizeof(char*));
+	titleBasics->primaryTitle = malloc(sizeof(char*));
+	titleBasics->originalTitle = malloc(sizeof(char*));
 	titleBasics->isAdult = 0; //non-adult;
-	titleBasics->startYear = (char*)malloc(sizeof(char*));
-	titleBasics->endYear = (char*)malloc(sizeof(char*));
+	titleBasics->startYear = malloc(sizeof(char*));
+	titleBasics->endYear = malloc(sizeof(char*));
 	titleBasics->runtimeMinutes = 0;
-    titleBasics->genres = (char**)malloc(3 * sizeof(char*));
-    titleBasics->height = height;
+    titleBasics->genres = malloc(3 * sizeof(char*));
+    /*titleBasics->genres[0] = malloc(100 * sizeof(char));
+    titleBasics->genres[1] = malloc(100 * sizeof(char));
+    titleBasics->genres[2] = malloc(100 * sizeof(char));
+    memset(&titleBasics->genres[0], '\0', sizeof(titleBasics->genres[0]));
+    memset(&titleBasics->genres[1], '\0', sizeof(titleBasics->genres[1]));
+    memset(&titleBasics->genres[2], '\0', sizeof(titleBasics->genres[2]));
+     */
     titleBasics->balance = balance;
     titleBasics->left = NULL;
     titleBasics->right = NULL;
@@ -161,10 +167,7 @@ void readAltTitlesFile()
 	char *tab = "\t";
 	int lineSize = 1024;
 
-	FILE *fptr;
-    
-    //open the file
-	fptr = fopen("title.akas.tsv", "r");
+	FILE *fptr = fopen("title.akas.tsv", "r");
 	if(fptr == NULL)
 	{
 		perror("Error: ");
@@ -219,21 +222,18 @@ void readAltTitlesFile()
 void readTitleBasicsFile()
 {
     TBasic *titleBasics = malloc(sizeof(TBasic));
-    titleBasics->height = 0;
-    titleBasics->balance = 0;
     //printf("HERE 1\n");
     //TBasic *titleBasics;
     //TBasic *titleBasics = newTitleBasics(0);
     int size = 0;
-    //int height = 0;
+    int balance = 0;
 	char *line = (char *)malloc(sizeof(char *));
     
 	char *tab = "\t";
 	int lineSize = 3000;
 
     //open the file
-	FILE *fptr;
-    fptr = fopen("title.basics.tsv", "r");
+	FILE *fptr = fopen("title.basics.tsv", "r");
 	if(fptr == NULL)
 	{
 		perror("Error: ");
@@ -249,7 +249,7 @@ void readTitleBasicsFile()
         char *copy = malloc(strlen(line)+1);
         copy = strndup(line, strlen(line)+1);
         
-        titleBasics = newTitleBasics(titleBasics->height, titleBasics->balance);
+        titleBasics = newTitleBasics(balance);
         
         //ID
         char *token = strtok(copy, tab);
@@ -268,12 +268,12 @@ void readTitleBasicsFile()
         
         //Primary Title
         token = strtok(NULL, tab);
-        //printf("Primary Title:%s\n", token);
+        //printf("Primary Title: %s\n", token);
         strcpy(titleBasics->primaryTitle, token);
         
         //Original Title
         token = strtok(NULL, tab);
-        //printf("Original Title%s\n", token);
+        //printf("Original Title: %s\n", token);
         strcpy(titleBasics->originalTitle, token);
         
         //Is Adult
@@ -303,7 +303,7 @@ void readTitleBasicsFile()
         //parse the genre token by commas (there can be 0-3 genres
         char* subtoken = strtok(copy, ",");
         //printf("\t genre 0:%s\n", subtoken);
-        titleBasics->genres[0] = malloc(strlen(subtoken) + 1);
+        titleBasics->genres[0] = malloc(strlen(subtoken + 1) * sizeof(char));
         strcpy(titleBasics->genres[0], subtoken);
         for(int i = 1; i <=2; i++)
         {
@@ -315,7 +315,7 @@ void readTitleBasicsFile()
             else
             {
                 //printf("\t genre %d:%s\n",i, subtoken);
-                titleBasics->genres[i] = malloc(strlen(subtoken) + 1);
+                titleBasics->genres[i] = malloc(strlen(subtoken + 1) * sizeof(char));
                 strcpy(titleBasics->genres[i], subtoken);
             }
         }
