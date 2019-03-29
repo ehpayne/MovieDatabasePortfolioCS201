@@ -14,6 +14,13 @@ extern void createMenu(char *username);
 extern void retrieveMenu();
 extern void updateMenu();
 extern void deleteMenu();
+extern void movieTitleSearchMenu(char *username);
+extern void actorNameSearchMenu(char *username);
+extern void directorNameSearchMenu(char *username);
+extern void movieInfoMenu(TBasic *movie);
+extern void actorInfoMenu(NBasic *actor);
+extern void directorInfoMenu(TExecs *director);
+
 
 //manipulate strings
 extern char *strlwr(char *str);

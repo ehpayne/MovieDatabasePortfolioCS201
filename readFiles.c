@@ -37,7 +37,7 @@ TAlt * newAltTitle()
 }
 
 //Constructor for TBasic structure
-TBasic *newTitleBasics()
+TBasic *newTitleBasics(int height, int balance)
 {
 	TBasic *titleBasics = malloc(sizeof(TBasic));
 
@@ -50,6 +50,8 @@ TBasic *newTitleBasics()
 	titleBasics->endYear = (char*)malloc(sizeof(char*));
 	titleBasics->runtimeMinutes = 0;
     titleBasics->genres = (char**)malloc(3 * sizeof(char*));
+    titleBasics->height = height;
+    titleBasics->balance = balance;
     titleBasics->left = NULL;
     titleBasics->right = NULL;
     titleBasics->next = NULL;
@@ -216,10 +218,14 @@ void readAltTitlesFile()
 //corresponding variable
 void readTitleBasicsFile()
 {
+    TBasic *titleBasics = malloc(sizeof(TBasic));
+    titleBasics->height = 0;
+    titleBasics->balance = 0;
     printf("HERE 1\n");
     //TBasic *titleBasics;
     //TBasic *titleBasics = newTitleBasics(0);
     int size = 0;
+    //int height = 0;
 	char *line = (char *)malloc(sizeof(char *));
     
 	char *tab = "\t";
@@ -241,49 +247,45 @@ void readTitleBasicsFile()
         //titleBasics = newTitleBasics();
         char *copy = malloc(strlen(line)+1);
         copy = strndup(line, strlen(line)+1);
-        //printf("strlen(line): %lu\n", strlen(line));
-        //printf("strlen(copy): %lu\n", strlen(copy));
-        //strcpy(copy, line);
-        //printf("copy: %s\n", copy);
         
-        TBasic *titleBasics = newTitleBasics();
+        titleBasics = newTitleBasics(titleBasics->height, titleBasics->balance);
         
+        //ID
         char *token = strtok(copy, tab);
         //printf("ID: %s\n", token);
-        
         strcpy(titleBasics->ID, token);
-        //=titleBasics->ID = token;
         
+        //Title Type
         token = strtok(NULL, tab);
         //printf("Title Type: %s\n", token);
         strcpy(titleBasics->titleType, token);
-        //titleBasics->titleType = token;
         
+        //Primary Title
         token = strtok(NULL, tab);
         //printf("Primary Title:%s\n", token);
         strcpy(titleBasics->primaryTitle, token);
-        //titleBasics->primaryTitle = token;
         
+        //Original Title
         token = strtok(NULL, tab);
         //printf("Original Title%s\n", token);
         strcpy(titleBasics->originalTitle, token);
-        //titleBasics->originalTitle = token;
         
+        //Is Adult
         token = strtok(NULL, tab);
         //printf("IsAdult: %s\n", token);
         titleBasics->isAdult = atoi(token);
         
-        
+        //Start Year
         token = strtok(NULL, tab);
         //printf("Start Year:%s\n", token);
         strcpy(titleBasics->startYear, token);
-        //titleBasics->startYear = token;
         
+        //End Year
         token = strtok(NULL, tab);
         //printf("End Year:%s\n", token);
         strcpy(titleBasics->endYear, token);
-        //titleBasics->endYear = token;
         
+        //Runtime Minutes
         token = strtok(NULL, tab);
         //printf("Runtime Minutes:%s\n", token);
         titleBasics->runtimeMinutes = atoi(token);
@@ -291,6 +293,7 @@ void readTitleBasicsFile()
         token = strtok(NULL, tab);
         //printf("Genres:%s\n", token);
         copy = strndup(token, strlen(token) +1);
+        
         //parse the genre token by commas (there can be 0-3 genres
         char* subtoken = strtok(copy, ",");
         //printf("\t genre 0:%s\n", subtoken);
@@ -310,9 +313,12 @@ void readTitleBasicsFile()
                 strcpy(titleBasics->genres[i], subtoken);
             }
         }
+        
+        
+        //printf("Storing\n");
         //store the record into a BST
         TBasicDataBST(titleBasics, size);
-        
+        //printf("Successful Store\n");
         //increase size
 		size++;
 

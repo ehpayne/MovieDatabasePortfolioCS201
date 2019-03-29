@@ -18,7 +18,7 @@ typedef struct name_basics NBasic;
 
 //Constructors for data structures
 extern TAlt *newAltTitle();
-extern TBasic *newTitleBasics();
+extern TBasic *newTitleBasics(int height, int balance);
 extern TExecs *newTitleExecs();
 extern TEpisode *newTitleEpisode();
 extern TCrew *newTitleCrew();
@@ -63,7 +63,8 @@ struct title_basics
     char *endYear;                        //TV series end year (/N for all other title types)
     int runtimeMinutes;                //primary runtime of the title in minutes
     char **genres;                        //includes up to three genres associated with the title
-    //int size;                                    //number of rows in the file
+    int height;                                    //number of rows in the file
+    int balance;
     TBasic *left, *right, *next, *parent;
 };
 

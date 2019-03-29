@@ -148,7 +148,6 @@ void loginMenu()
         if(userandPasswordFound == 1)
         {
             system("clear");
-            printf("\n\nWELCOME BACK!!\n\n");
             initialMenu(username_input);
             break;
         }
@@ -176,7 +175,7 @@ void initialMenu(char *username)
     {
         printf("Would you like to: \n A. Create a catolog \n"
                " B. Lookup a record \n C. Update a catolog \n"
-               " D. Delete a catolog\n" );
+               " D. Delete a catolog\n E. Exit the database\n" );
         scanf("%c",&input);
         scanf("%c",&input);
         input = tolower(input);
@@ -199,6 +198,10 @@ void initialMenu(char *username)
         {
             //the user wants to delete
             deleteMenu();
+        }
+        else if(input == 'e')
+        {
+            printf("Thank you for using the Movie Database.\n Goodbye!\n");
         }
         else
         {
@@ -223,7 +226,6 @@ void createMenu(char *username)
         
         input = tolower(input);
         
-        
         printf("What would you like to name your catalog?\n");
         scanf("%c",&temp); //clear buffer by storing it into temp
         scanf("%[^\n]",catalogName);
@@ -240,21 +242,11 @@ void createMenu(char *username)
             input = tolower(input);
             if(input == 'a')
             {
-                char *movieTitle = malloc(sizeof(char*));
-                printf("Enter a movie title you would like to add\n");
-                scanf("%c",&temp); //clear buffer by storing it into temp
-                scanf("%[^\n]",movieTitle);
-                
-                //search hash table
-                //if title is found, searchBST
-                //if(tree == NULL) readTitleBasics then search
-                //else if(search not found) return error
-                //else return correct search key and add to movie catolog
-                
+                movieTitleSearchMenu(username);
             }
             else if(input == 'b')
             {
-                break;
+                initialMenu(username);
             }
             else
             {
@@ -456,6 +448,93 @@ void deleteMenu()
         }
     }while(input != 'a' && input != 'b' && input != 'c' &&
            input != 'd' && input != 'e' && input != 'f' && input != 'g');
+}
+void movieTitleSearchMenu(char *username)
+{
+    char *movieTitle = malloc(sizeof(char*));
+    char input;
+    char temp;
+    printf("Enter a movie title you would like to add to your catalog\n");
+    scanf("%c",&temp); //clear buffer by storing it into temp
+    scanf("%[^\n]",movieTitle);
+    readTitleBasicsFile();
+    TBasic *movie = searchTBasicBST(movieTitle);
+    
+    if(movie == NULL)
+    {
+        printf("Movie record not found.\n Would you like to search for another movie?\n"
+               " A. Yes\n B. No\n");
+        scanf("%c", &input);
+        input = tolower(input);
+        while(input == 'a')
+        {
+            char *movieTitle = malloc(sizeof(char*));
+            printf("Enter a movie title you would like to add to your catalog\n");
+            scanf("%c",&temp); //clear buffer by storing it into temp
+            scanf("%[^\n]",movieTitle);
+            
+            TBasic *movie = searchTBasicBST(movieTitle);
+            
+            if(movie == NULL)
+            {
+                printf("Movie record not found.\n"
+                       "Would you like to try again or search for another movie?\n"
+                       " A. Yes\n B. No\n");
+                scanf("%c", &input);
+                input = tolower(input);
+            }
+        }
+        if(input == 'b')
+        {
+            initialMenu(username);
+        }
+    }
+    else
+    {
+        printf("Movie found!\n");
+        movieInfoMenu(movie);
+        printf("Are you sure you want to add this movie to your catalog?\n"
+               " A. Yes\n B. No\n");
+        scanf("%c", &input);
+        if(input == 'a')
+        {
+           //add to array of movies
+        }
+        else if(input == 'b')
+        {
+            initialMenu(username);
+        }
+    }
+}
+
+void movieInfoMenu(TBasic *movie)
+{
+    printf("Movie Title: %s\n", movie->primaryTitle);
+    printf("Movie Type: %s\n", movie->titleType);
+    printf("Year Released: %s\n", movie->startYear);
+    printf("Runtime (minutes): %d\n", movie->runtimeMinutes);
+    char *isAdult;
+    if(movie->isAdult == 0)
+    {
+        isAdult = "No";
+    }
+    else
+    {
+        isAdult = "Yes";
+    }
+    printf("Adult Movie?: %s\n", isAdult);
+    printf("Genres: \n");
+    for(int i = 0; i < 3; i++)
+    {
+        if(movie->genres[i] != NULL)
+        {
+            printf("\t%s", movie->genres[i]);
+        }
+        else
+        {
+            break;
+        }
+    }
 }
 
 char *strlwr(char *str)
