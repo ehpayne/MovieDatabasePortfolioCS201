@@ -333,6 +333,7 @@ void readTitleBasicsFile()
 			break;
 		}
 	}
+    printf("SIZE: %d\n", size);
     //close file
 	fclose(fptr);
     free(line);
@@ -682,6 +683,7 @@ void readNameBasicsFile()
             break;
         }
     }
+    
     //close file
     fclose(fptr);
 }

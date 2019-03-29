@@ -23,7 +23,7 @@ struct HashTableEntry
 {
     Entry *next;
     char *title;
-    char *title ID;
+    char *titleID;
 };
 
 //HTable is a struct for the hash table. It contains an array of Entries and a size
@@ -34,8 +34,10 @@ struct HashTable
     int size;
     Entry **table;
 }
+Entry *newEntry(char *title, char *ID);
+HTable *newHashTable();
 int hashFunction(char * str, int numberOfBuckets);
-void hashTableINSERT(HTable *table, char * title, char *ID);
+void hashTableINSERT(int size, char * title, char *ID);
 char *hashTableSEARCH(char *title); //returns ID
 
 
