@@ -10,6 +10,7 @@
 #include <string.h>
 #include "readFiles.h"
 #include "storeData.h"
+#include "hash.h"
 
 TAlt *tAltRoot;
 TBasic *tBasicsRoot;
@@ -50,6 +51,8 @@ void TBasicDataBST(TBasic* titleBasicsNode, int size)
     if(size == 0)
     {
         tBasicsRoot = titleBasicsNode;
+        //insert root into hash table
+        hashTableINSERT(size, titleBasicsNode->primaryTitle, titleBasicsNode->ID);
         
         //printf("root: %s\n", tBasicsRoot->ID);
     }
@@ -114,8 +117,8 @@ void TBasicDataBST(TBasic* titleBasicsNode, int size)
             //printf("ID: %s is a duplicate\n", titleBasicsNode->ID);
         }
         TBasic_RestoreAVL(ancestor, titleBasicsNode);
-        
-        //HASH FUNCTION
+        //insert the primary title and titleID into the hash table
+        hashTableINSERT(size, titleBasicsNode->primaryTitle, titleBasicsNode->ID);
        // printf("ROOT: %s\n", tBasicsRoot->ID);
         //printf("NODE: %s\n", titleBasicsNode->ID);
         //printf("root->balance = %d, parent->balance = %d\n", tBasicsRoot->balance,

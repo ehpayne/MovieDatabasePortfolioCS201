@@ -33,11 +33,12 @@ struct HashTable
 {
     int size;
     Entry **table;
-}
+};
 Entry *newEntry(char *title, char *ID);
 HTable *newHashTable();
-int hashFunction(char * str, int numberOfBuckets);
-void hashTableINSERT(int size, char * title, char *ID);
+unsigned int hashFunction(char *str, int size);
+unsigned int doubleHashFunction(unsigned int oldIndex, char *str, int size);
+void hashTableINSERT(int size, char *title, char *ID);
 char *hashTableSEARCH(char *title); //returns ID
 
 
