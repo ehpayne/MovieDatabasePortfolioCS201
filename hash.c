@@ -18,12 +18,10 @@ Entry *newEntry(char *title, char *ID)
 {
     Entry *e = malloc(sizeof(Entry));
     e->next = NULL;
-    printf("Title: %s\n", title);
-    printf("Title ID: %s\n", ID);
-    e->title = malloc(strlen(title) * sizeof(char *));
-    strcpy(e->title, title);
-    e->titleID = malloc(strlen(title) * sizeof(char *));
-    strcpy(e->titleID, ID);
+    //printf("Title: %s\n", title);
+    //printf("Title ID: %s\n", ID);
+    e->title = strndup(title, strlen(title) + 1);
+    e->titleID = strndup(ID, strlen(ID) + 1);
     return e;
 }
 HTable *newHashTable()
@@ -38,6 +36,7 @@ HTable *newHashTable()
 
 unsigned int hashFunction(char *str, int size)
 {
+    //printf("IN HASH FUNCTION\n");
     unsigned int index = 7717; //prime number
     for(int i = 0; i < sizeof(str); i++)
     {
@@ -46,8 +45,9 @@ unsigned int hashFunction(char *str, int size)
             break;
         }
         index = ((73 * index) * str[i]) % size;
-       // printf("index: %d\n", index);
+        //printf("index: %d\n", index);
     }
+    //printf("leaving hash function\n");
     return index;
 }
 
@@ -68,7 +68,8 @@ unsigned int doubleHashFunction(unsigned int oldIndex, char *str, int size)
 
 void hashTableINSERT(int size, char *title, char *ID)
 {
-    printf("***********HASH TABLE INSERT************\n");
+    //printf("here 3\n");
+    //printf("***********HASH TABLE INSERT************\n");
     if(size == 0)
     {
         //printf("size == 0\n");
@@ -84,7 +85,7 @@ void hashTableINSERT(int size, char *title, char *ID)
         
     if(hashTable->table[index] != NULL)
     {
-        //printf("collision. double hash\n");
+       // printf("collision. double hash\n");
         index = doubleHashFunction(index, title, hashTable->size);
         //printf("NEW INDEX: %u\n", index);
         if(hashTable->table[index] != NULL)

@@ -226,15 +226,14 @@ void readAltTitlesFile()
 void readTitleBasicsFile()
 {
     TBasic *titleBasics;
-    //printf("HERE 2\n");
-    //TBasic *titleBasics;
-    //TBasic *titleBasics = newTitleBasics(0);
+    //printf("^^^^^^^^^^^^^^^^READ FILE^^^^^^^^^^^^^^^^^\n");
     int size = 0;
     int balance = 0;
-	char *line = malloc(sizeof(char *));
+    int lineSize = 3000;
+	char *line = malloc(lineSize * sizeof(char));
     
 	char *tab = "\t";
-	int lineSize = 3000;
+	
 
     //open the file
 	FILE *fptr = fopen("title.basics.tsv", "r");
@@ -248,6 +247,7 @@ void readTitleBasicsFile()
     //while !EOF read a line and parse the data
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
+        //printf("^^^^^^^^^^^^^^^^READ FILE^^^^^^^^^^^^^^^^^\n");
         //printf("HERE 4\n");
         //printf("line: %s\n", line);
         //printf("HERE 5\n");
@@ -259,7 +259,6 @@ void readTitleBasicsFile()
         //ID
         char *token = strtok(copy, tab);
         //printf("ID: %s\n", token);
-        //titleBasics->ID = strncpy(titleBasics->ID, token, strlen(token) + 1);
         titleBasics->ID = strndup(token, strlen(token)+1);
         //printf("HERE 8\n");
         
@@ -306,37 +305,30 @@ void readTitleBasicsFile()
         
         token = strtok(NULL, tab);
         //printf("Genres:%s\n", token);
+        //remove the newline character at the end of the line
+        token[strlen(token)-1] = '\0';
         copy = strndup(token, strlen(token) +1);
         
         //parse the genre token by commas (there can be 0-3 genres
         char* subtoken = strtok(copy, ",");
         
         //printf("\t genre 0:%s\n", subtoken);
-        //printf("BEFORE MALLOC: strlen(subtoken): %lu, strlen(genre[0]): %lu\n",
-          //     strlen(subtoken), strlen(titleBasics->genres[0]));
-        titleBasics->genres[0] = strndup(subtoken, strlen(subtoken) + 1);
-        //titleBasics->genres[0] = malloc((strlen(subtoken) + 1) * sizeof(char));
-        //printf("AFTER MALLOC: strlen(subtoken): %lu, strlen(genre[0]): %lu\n",
-               // strlen(subtoken), strlen(titleBasics->genres[0]));
-        //titleBasics->genres[0] = strncpy(titleBasics->genres[0], subtoken,
-                                         //strlen(subtoken)+1);
+        titleBasics->genres[0] = strndup(subtoken, (strlen(subtoken) + 1));
         //printf("STRCPY: strlen(subtoken): %lu, strlen(genre[0]): %lu\n",
-              // strlen(subtoken),strlen(titleBasics->genres[0]));
+               //strlen(subtoken),strlen(titleBasics->genres[0]));
         for(int i = 1; i <=2; i++)
         {
             subtoken = strtok(NULL, ",");
             if(subtoken == NULL)
             {
+                //printf ("   genre loop terminated.");
                 break;
             }
             else
             {
                 //printf("\t genre %d:%s\n",i, subtoken);
-                //printf("BEFORE MALLOC: strlen(subtoken): %lu, strlen(genre[%d]): %lu\n", strlen(subtoken), i, strlen(titleBasics->genres[i]));
-                titleBasics->genres[i] = strndup(subtoken, strlen(subtoken) + 1);
-               // printf("AFTER MALLOC: strlen(subtoken): %lu, strlen(genre[%d]): %lu\n", strlen(subtoken), i, strlen(titleBasics->genres[i]));
-                //titleBasics->genres[i] =  strncpy(titleBasics->genres[i], subtoken,
-                                                // strlen(subtoken) + 1);
+                
+                titleBasics->genres[i] = strndup(subtoken, (strlen(subtoken) + 1));
                 //printf("STRCPY: strlen(subtoken): %lu, strlen(genre[%d]): %lu\n", strlen(subtoken), i, strlen(titleBasics->genres[i]));
             }
         }
@@ -356,7 +348,7 @@ void readTitleBasicsFile()
 			break;
 		}
 	}
-    printf("SIZE: %d\n", size);
+    //printf("SIZE: %d\n", size);
     //close file
 	fclose(fptr);
     free(line);
