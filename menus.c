@@ -186,6 +186,7 @@ void initialMenu(char *username)
         }
         else if(input == 'b')
         {
+            printf("HERE 1\n");
             //the user wants to lookup
             retrieveMenu();
         }

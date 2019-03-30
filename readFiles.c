@@ -39,30 +39,34 @@ TAlt * newAltTitle()
 //Constructor for TBasic structure
 TBasic *newTitleBasics(int balance)
 {
+    //printf("IN CONSTRUCTOR\n");
 	TBasic *titleBasics = malloc(sizeof(TBasic));
-
-	titleBasics->ID = malloc(sizeof(char*));
-	titleBasics->titleType = malloc(sizeof(char*));
-	titleBasics->primaryTitle = malloc(sizeof(char*));
-	titleBasics->originalTitle = malloc(sizeof(char*));
+    //printf("CREATED TITLE BASICS\n");
+	titleBasics->ID = NULL;
+    //printf("ID\n");
+    titleBasics->titleType = NULL;
+    //printf("TITLE TYPE\n");
+    titleBasics->primaryTitle = NULL;
+    //printf("PRIMARY TITLE\n");
+    titleBasics->originalTitle = NULL;
+    //printf("ORIGINAL TITLE\n");
 	titleBasics->isAdult = 0; //non-adult;
-	titleBasics->startYear = malloc(sizeof(char*));
-	titleBasics->endYear = malloc(sizeof(char*));
+    //printf("IS ADULT\n");
+    titleBasics->startYear = NULL;
+    //printf("START YEAR\n");
+    titleBasics->endYear = NULL;
+    //printf("END YEAR\n");
 	titleBasics->runtimeMinutes = 0;
+    //printf("RUNTIME MINUTES\n");
     titleBasics->genres = malloc(3 * sizeof(char*));
-    /*titleBasics->genres[0] = malloc(100 * sizeof(char));
-    titleBasics->genres[1] = malloc(100 * sizeof(char));
-    titleBasics->genres[2] = malloc(100 * sizeof(char));
-    memset(&titleBasics->genres[0], '\0', sizeof(titleBasics->genres[0]));
-    memset(&titleBasics->genres[1], '\0', sizeof(titleBasics->genres[1]));
-    memset(&titleBasics->genres[2], '\0', sizeof(titleBasics->genres[2]));
-     */
+    //printf("GENRES\n");
     titleBasics->balance = balance;
+    //printf("BALANCE\n");
     titleBasics->left = NULL;
     titleBasics->right = NULL;
     titleBasics->next = NULL;
     titleBasics->parent = NULL;
-
+    //printf("RETURN\n");
 	return titleBasics;
 }
 
@@ -221,13 +225,13 @@ void readAltTitlesFile()
 //corresponding variable
 void readTitleBasicsFile()
 {
-    TBasic *titleBasics = malloc(sizeof(TBasic));
-    //printf("HERE 1\n");
+    TBasic *titleBasics;
+    //printf("HERE 2\n");
     //TBasic *titleBasics;
     //TBasic *titleBasics = newTitleBasics(0);
     int size = 0;
     int balance = 0;
-	char *line = (char *)malloc(sizeof(char *));
+	char *line = malloc(sizeof(char *));
     
 	char *tab = "\t";
 	int lineSize = 3000;
@@ -240,41 +244,45 @@ void readTitleBasicsFile()
 	}
     //read in the header line (not used)
 	fgets(line, lineSize, fptr);
+    //printf("HERE 3\n");
     //while !EOF read a line and parse the data
 	while (fgets(line, lineSize, fptr) != NULL)
 	{
-        
+        //printf("HERE 4\n");
         //printf("line: %s\n", line);
-        //titleBasics = newTitleBasics();
-        char *copy = malloc(strlen(line)+1);
-        copy = strndup(line, strlen(line)+1);
-        
+        //printf("HERE 5\n");
+        char *copy = strndup(line, strlen(line)+1);
+        //printf("HERE 6\n");
         titleBasics = newTitleBasics(balance);
+        //printf("HERE 7\n");
         
         //ID
         char *token = strtok(copy, tab);
         //printf("ID: %s\n", token);
-        strcpy(titleBasics->ID, token);
+        //titleBasics->ID = strncpy(titleBasics->ID, token, strlen(token) + 1);
+        titleBasics->ID = strndup(token, strlen(token)+1);
+        //printf("HERE 8\n");
         
         //Title Type
         token = strtok(NULL, tab);
+        //printf("TOKEN: %s\n", token);
         if(strcmp(token, "tvEpisode") == 0)
         {
             //printf("SKIPPED EPISODE\n");
             continue;
         }
         //printf("Title Type: %s\n", token);
-        strcpy(titleBasics->titleType, token);
+        titleBasics->titleType = strndup(token, strlen(token)+1);
         
         //Primary Title
         token = strtok(NULL, tab);
         //printf("Primary Title: %s\n", token);
-        strcpy(titleBasics->primaryTitle, token);
+        titleBasics->primaryTitle = strndup(token, strlen(token)+1);
         
         //Original Title
         token = strtok(NULL, tab);
         //printf("Original Title: %s\n", token);
-        strcpy(titleBasics->originalTitle, token);
+        titleBasics->originalTitle = strndup(token, strlen(token)+1);
         
         //Is Adult
         token = strtok(NULL, tab);
@@ -284,12 +292,12 @@ void readTitleBasicsFile()
         //Start Year
         token = strtok(NULL, tab);
         //printf("Start Year:%s\n", token);
-        strcpy(titleBasics->startYear, token);
+        titleBasics->startYear = strndup(token, strlen(token)+1);
         
         //End Year
         token = strtok(NULL, tab);
         //printf("End Year:%s\n", token);
-        strcpy(titleBasics->endYear, token);
+        titleBasics->endYear = strndup(token, strlen(token)+1);
         
         //Runtime Minutes
         token = strtok(NULL, tab);
@@ -302,9 +310,18 @@ void readTitleBasicsFile()
         
         //parse the genre token by commas (there can be 0-3 genres
         char* subtoken = strtok(copy, ",");
+        
         //printf("\t genre 0:%s\n", subtoken);
-        titleBasics->genres[0] = malloc(strlen(subtoken + 1) * sizeof(char));
-        strcpy(titleBasics->genres[0], subtoken);
+        //printf("BEFORE MALLOC: strlen(subtoken): %lu, strlen(genre[0]): %lu\n",
+          //     strlen(subtoken), strlen(titleBasics->genres[0]));
+        titleBasics->genres[0] = strndup(subtoken, strlen(subtoken) + 1);
+        //titleBasics->genres[0] = malloc((strlen(subtoken) + 1) * sizeof(char));
+        //printf("AFTER MALLOC: strlen(subtoken): %lu, strlen(genre[0]): %lu\n",
+               // strlen(subtoken), strlen(titleBasics->genres[0]));
+        //titleBasics->genres[0] = strncpy(titleBasics->genres[0], subtoken,
+                                         //strlen(subtoken)+1);
+        //printf("STRCPY: strlen(subtoken): %lu, strlen(genre[0]): %lu\n",
+              // strlen(subtoken),strlen(titleBasics->genres[0]));
         for(int i = 1; i <=2; i++)
         {
             subtoken = strtok(NULL, ",");
@@ -315,15 +332,21 @@ void readTitleBasicsFile()
             else
             {
                 //printf("\t genre %d:%s\n",i, subtoken);
-                titleBasics->genres[i] = malloc(strlen(subtoken + 1) * sizeof(char));
-                strcpy(titleBasics->genres[i], subtoken);
+                //printf("BEFORE MALLOC: strlen(subtoken): %lu, strlen(genre[%d]): %lu\n", strlen(subtoken), i, strlen(titleBasics->genres[i]));
+                titleBasics->genres[i] = strndup(subtoken, strlen(subtoken) + 1);
+               // printf("AFTER MALLOC: strlen(subtoken): %lu, strlen(genre[%d]): %lu\n", strlen(subtoken), i, strlen(titleBasics->genres[i]));
+                //titleBasics->genres[i] =  strncpy(titleBasics->genres[i], subtoken,
+                                                // strlen(subtoken) + 1);
+                //printf("STRCPY: strlen(subtoken): %lu, strlen(genre[%d]): %lu\n", strlen(subtoken), i, strlen(titleBasics->genres[i]));
             }
         }
         
         
         //printf("Storing\n");
         //store the record into a BST
-        TBasicDataBST(titleBasics, size);
+        
+       TBasicDataBST(titleBasics, size);
+        
         //printf("Successful Store\n");
         //increase size
 		size++;

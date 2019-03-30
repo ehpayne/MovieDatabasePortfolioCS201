@@ -18,8 +18,12 @@ Entry *newEntry(char *title, char *ID)
 {
     Entry *e = malloc(sizeof(Entry));
     e->next = NULL;
-    e->title = title;
-    e->titleID = ID;
+    printf("Title: %s\n", title);
+    printf("Title ID: %s\n", ID);
+    e->title = malloc(strlen(title) * sizeof(char *));
+    strcpy(e->title, title);
+    e->titleID = malloc(strlen(title) * sizeof(char *));
+    strcpy(e->titleID, ID);
     return e;
 }
 HTable *newHashTable()
@@ -67,46 +71,46 @@ void hashTableINSERT(int size, char *title, char *ID)
     printf("***********HASH TABLE INSERT************\n");
     if(size == 0)
     {
-        printf("size == 0\n");
+        //printf("size == 0\n");
         hashTable = newHashTable();
-        printf("table created\n");
+        //printf("table created\n");
     }
-    printf("creating entry now\n");
+    //printf("creating entry now\n");
     Entry *entry = newEntry(title, ID);
-    printf("entry->title: %s\t entry->ID: %s\n", entry->title, entry->titleID);
+    //printf("entry->title: %s\t entry->ID: %s\n", entry->title, entry->titleID);
     unsigned int index = hashFunction(title, hashTable->size);
     
-    printf("ORIGINAL INDEX: %u\n", index);
+    //printf("ORIGINAL INDEX: %u\n", index);
         
     if(hashTable->table[index] != NULL)
     {
-        printf("collision. double hash\n");
+        //printf("collision. double hash\n");
         index = doubleHashFunction(index, title, hashTable->size);
-        printf("NEW INDEX: %u\n", index);
+        //printf("NEW INDEX: %u\n", index);
         if(hashTable->table[index] != NULL)
         {
-            printf("slot already filled\n");
+            //printf("slot already filled\n");
             Entry *temp = hashTable->table[index];
             Entry *back = NULL;
             while(temp != NULL)
             {
-                printf("going next\n");
+                //printf("going next\n");
                 back = temp;
                 temp = temp->next;
             }
-            printf("attaching new entry\n");
+            //printf("attaching new entry\n");
             back->next = entry;
         }
         else
         {
-            printf("new index empty. inserting value\n");
+            //printf("new index empty. inserting value\n");
             hashTable->table[index] = entry;
         }
         
     }
     else
     {
-        printf("no collision. inserting value\n");
+        //printf("no collision. inserting value\n");
         hashTable->table[index] = entry;
     }
 }
