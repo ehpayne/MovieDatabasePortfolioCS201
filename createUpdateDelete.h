@@ -31,17 +31,19 @@ struct MovieCatalogNameList
 };
 extern MovieCatalogList *mCatalogNameList;
 
+//constructors
 MovieRecord *newMovieRecord(TBasic *movie);
 MovieCatalog *newMovieCatalog(char *newName);
 
+//create, update, delete
 void addMovieToCatalog(char *catalogName, TBasic *movie);
-
 MovieCatalog *addMovieCatalogToCatalogList(char *newName);
+void updateMovieCatalog(char *username, char *catalogName, char *title);
+void deleteMovieCatalog(char *username,char *catalogName);
 
-
-void printInfoToLogFile(char *username);
+//working with the log file
+void printInfo(char *username, int printType);
 void readInLogFile(char *username);
-
 
 
 

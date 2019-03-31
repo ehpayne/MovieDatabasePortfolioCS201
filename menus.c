@@ -51,7 +51,7 @@ void newUserMenu()
 {
     char* username_input = malloc(sizeof(char*));
     char temp;
-
+    
     printf("\n\nWELCOME!!\n\n");
     printf("Please create a username:\n");
     scanf("%c",&temp); //clear buffer by storing it into temp
@@ -137,7 +137,7 @@ void loginMenu()
     do
     {
         FILE* fptr = fopen("UserInfo.txt", "r");
-
+        
         //read in username
         char* username_input =  malloc(sizeof(char*));
         printf("\n\nUSERNAME:\n\n");
@@ -159,7 +159,7 @@ void loginMenu()
             initialMenu(username_input);
         }
         //search for the username or password in the UserInfo.txt file
-
+        
         char *line = malloc(sizeof(char *));
         int lineSize = 1024;
         int onlyUsernameIsFound = 0; //FALSE
@@ -237,17 +237,17 @@ void initialMenu(char *username)
         else if(input == 'c')
         {
             //the user wants to update
-            updateMenu();
+            updateMenu(username);
         }
         else if(input == 'd')
         {
             //the user wants to delete
-            deleteMenu();
+            deleteMenu(username);
         }
         else if(input == 'e')
         {
             printf("Writing to your log file\n");
-            printInfoToLogFile(username);
+            printInfo(username, 0); //print to log file
             printf("Thank you for using the Movie Database.\n Goodbye!\n");
             
         }
@@ -288,7 +288,7 @@ void createMenu(char *username)
             input = tolower(input);
             if(input == 'a')
             {
-                movieTitleSearchMenu(username, catalogName);
+                movieTitleSearchMenu(username, catalogName, 0);
             }
             else if(input == 'b')
             {
@@ -351,7 +351,7 @@ void retrieveMenu(char *username)
         input = tolower(input);
         if(input == 'a')
         {
-            movieTitleSearchMenu(username, "Search History");
+            movieTitleSearchMenu(username, "Search History", 1);
             
         }
         else if(input == 'b')
@@ -370,111 +370,95 @@ void retrieveMenu(char *username)
     }while(input != 'a' && input != 'b' && input != 'c');
 }
 
-void updateMenu()
+void updateMenu(char *username)
 {
-    char input;
-    do
+    char temp;
+    char *catalogName = malloc(sizeof(char *));
+    char *movieTitle = malloc(sizeof(char *));
+    //if they want to update first, read from log file
+    if(mCatalogNameList == NULL)
     {
-        //open the log file
-        //print out the user's catalogs
-        //ask them what catalog they would like to update
-        printf("What type of data would you like to update? \n"
-               " A. Alternative Titles \n B. Basic Title Info \n"
-               " C. Directors/Writers \n D. Episode Info \n"
-               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
-        scanf("%c",&input);
-        scanf("%c",&input);
-        input = tolower(input);
-        
-        if(input == 'a')
+        readInLogFile(username);
+        //if there is nothing in the log file
+        if(mCatalogNameList == NULL)
         {
-            
-        }
-        else if(input == 'b')
-        {
-            
-        }
-        else if(input == 'c')
-        {
-            
-        }
-        else if(input == 'd')
-        {
-            
-        }
-        else if(input == 'e')
-        {
-            
-        }
-        else if(input == 'f')
-        {
-            
-        }
-        else if(input == 'g')
-        {
-            
+            printf("Nothing to update\n");
+            initialMenu(username);
         }
         else
         {
-            printf("Incorrect Input. Enter a letter A-G. Try Again.\n");
-            
+            printInfo(username, 1); //print to stdout
         }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
-           &&input != 'e' && input != 'f' && input != 'g');
+    }
+    else
+    {
+        printInfo(username, 1); //print to stdout
+        
+    }
+    
+    printf("Enter the name of the catalog you would like to update:\n");
+    scanf("%c", &temp); //clear buffer by storing it into temp
+    scanf("%[^\n]", catalogName);
+    do
+    {
+        printf("Would you like to: \n"
+               " A. Add a record to the catalog\n"
+               " B. Delete a record from the catalog\n");
+        scanf("%c", &temp);
+        scanf("%c", &temp);
+        if(temp == 'a')
+        {
+            movieTitleSearchMenu(username, catalogName, 0);
+        }
+        else if(temp == 'b')
+        {
+            printf("Enter the title of the movie you would like to delete from the catalog\n");
+            updateMovieCatalog(username, catalogName, movieTitle);
+        }
+        else
+        {
+            printf("Incorrect Input. Please enter a letter from A-B. Try Again\n\n");
+        }
+        
+    }while(temp != 'a' && temp != 'b');
+    
 }
 
-void deleteMenu()
+void deleteMenu(char *username)
 {
-    char input;
-    do
+    char temp;
+    char *catalogName = malloc(sizeof(char *));
+    //char *movieTitle = malloc(sizeof(char *));
+    //if they want to update first, read from log file
+    if(mCatalogNameList == NULL)
     {
-        //open the log file
-        //print out the user's catalogs
-        //ask them what catalog they would like to update
-        printf("What type of data would you like to delete? \n"
-               " A. Alternative Titles \n B. Basic Title Info \n"
-               " C. Directors/Writers \n D. Episode Info \n"
-               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
-        scanf("%c",&input);
-        scanf("%c",&input);
-        input = tolower(input);
-        
-        if(input == 'a')
+        readInLogFile(username);
+        //if there is nothing in the log file
+        if(mCatalogNameList == NULL)
         {
-            
-        }
-        else if(input == 'b')
-        {
-            
-        }
-        else if(input == 'c')
-        {
-            
-        }
-        else if(input == 'd')
-        {
-            
-        }
-        else if(input == 'e')
-        {
-            
-        }
-        else if(input == 'f')
-        {
-            
-        }
-        else if(input == 'g')
-        {
-            
+            printf("Nothing to delete.\n");
+            initialMenu(username);
         }
         else
         {
-            printf("Incorrect Input. Enter a letter A-G. Try Again.\n");
+            printInfo(username, 1); //print to stdout
         }
-    }while(input != 'a' && input != 'b' && input != 'c' &&
-           input != 'd' && input != 'e' && input != 'f' && input != 'g');
+    }
+    else
+    {
+        printInfo(username, 1); //print to stdout
+        
+    }
+    
+    printf("Enter the name of the catalog you would like to delete:\n");
+    scanf("%c", &temp); //clear buffer by storing it into temp
+    scanf("%[^\n]", catalogName);
+    
+    deleteMovieCatalog(username,catalogName);
+    printf("Catalog was successfully deleted\n");
+    initialMenu(username);
 }
-void movieTitleSearchMenu(char *username, char *catalogName)
+void movieTitleSearchMenu(char *username, char *catalogName, int searchType)
 {
     char *movieTitle = malloc(sizeof(char*));
     char input;
@@ -522,21 +506,30 @@ void movieTitleSearchMenu(char *username, char *catalogName)
     {
         printf("\n\nMovie found!\n");
         movieInfoMenu(movie);
-        printf("Would you like to add this movie to your catalog?\n"
-               " A. Yes\n B. No\n");
-        scanf("%c", &input);
-        scanf("%c", &input);
-        
-        if(input == 'a')
+        if(searchType == 0)
+        {
+            printf("Would you like to add this movie to your catalog?\n"
+                   " A. Yes\n B. No\n");
+            scanf("%c", &input);
+            scanf("%c", &input);
+            
+            if(input == 'a')
+            {
+                addMovieToCatalog(catalogName, movie);
+                printf("%s has been added to your %s catalog.\n", movieTitle, catalogName);
+                initialMenu(username);
+            }
+            else if(input == 'b')
+            {
+                initialMenu(username);
+            }
+        }
+        else
         {
             addMovieToCatalog(catalogName, movie);
-            printf("%s has been added to your %s catalog.\n", movieTitle, catalogName);
             initialMenu(username);
         }
-        else if(input == 'b')
-        {
-            initialMenu(username);
-        }
+        
     }
 }
 

@@ -31,19 +31,15 @@ MovieCatalog *newCatalog(char *name)
 
 void addMovieToCatalog(char *catalogName, TBasic *movie)
 {
-    //printf("ADDING MOVIE\n");
     MovieCatalog *catalog = addMovieCatalogToCatalogList(catalogName);
-   // printf("ADDING CATALOG\n");
     MovieRecord *temp = catalog->headMovie;
     MovieRecord *back = NULL;
     if(temp == NULL)
     {
-        //printf("FIRST CATALOG. ADDING TO HEAD\n");
         catalog->headMovie = newMovieRecord(movie);
     }
     else
     {
-        //printf("WALKING DOWN LINKED LIST\n");
         while (temp != NULL)
         {
             back = temp;
@@ -55,7 +51,6 @@ void addMovieToCatalog(char *catalogName, TBasic *movie)
             temp = temp->next;
         }
         back->next = newMovieRecord(movie);
-        //printf("DONE\n");
     }
     
     
@@ -92,33 +87,123 @@ MovieCatalog *addMovieCatalogToCatalogList(char *newName)
     }
 }
 
-void printInfoToLogFile(char *username)
+void updateMovieCatalog(char *username, char *catalogName, char *title)
 {
-    char *filename = appendFilename(username);
-    FILE *fptr = fopen(filename, "a");
-    if(mCatalogNameList == NULL)
+    MovieCatalog *tempCatalog = mCatalogNameList->headCatalog;
+    
+    while(tempCatalog != NULL)
     {
-        fprintf(fptr, "####\n");
-    }
-    else
-    {
-        MovieCatalog *tempCatalog = mCatalogNameList->headCatalog;
-        while (tempCatalog != NULL)
+        if(strcmp(tempCatalog->name, catalogName) == 0)
         {
-            fprintf(fptr,"%s\n", tempCatalog->name);
             MovieRecord *tempMovie = tempCatalog->headMovie;
-            while(tempMovie != NULL)
+            MovieRecord *back = NULL;
+            while (tempMovie != NULL)
             {
-                fprintf(fptr,"\t%s\n", tempMovie->movie->primaryTitle);
+                back = tempMovie;
+                if(strcmp(tempMovie->movie->primaryTitle, title) == 0)
+                {
+                    back->next = tempMovie->next;
+                    tempMovie->next = NULL;
+                    
+                    break;
+                }
                 tempMovie = tempMovie->next;
             }
+            break;
+        }
+        
+        tempCatalog = tempCatalog->next;
+        
+    }
+    if(tempCatalog == NULL)
+    {
+        printf("Catalog was not found\n");
+        initialMenu(username);
+    }
+    
+}
+
+void deleteMovieCatalog(char *username, char *catalogName)
+{
+    MovieCatalog *tempCatalog = mCatalogNameList->headCatalog;
+    MovieCatalog *back = NULL;
+    while(tempCatalog != NULL)
+    {
+        back = tempCatalog;
+        if(strcmp(tempCatalog->name, catalogName) == 0)
+        {
+            back->next = tempCatalog->next;
+            tempCatalog->next = NULL;
+            break;
+        }
+        tempCatalog = tempCatalog->next;
+    }
+    if(tempCatalog == NULL)
+    {
+        printf("Catalog was not found\n");
+        initialMenu(username);
+    }
+    
+}
+
+void printInfo(char *username, int printType)
+{
+    
+    if(printType == 0)
+    {
+        char *filename = appendFilename(username);
+        FILE *fptr = fopen(filename, "a");
+        
+        if(mCatalogNameList == NULL)
+        {
             fprintf(fptr, "####\n");
-            tempCatalog = tempCatalog->next;
-            
-            
+        }
+        else
+        {
+            MovieCatalog *tempCatalog = mCatalogNameList->headCatalog;
+            while (tempCatalog != NULL)
+            {
+                fprintf(fptr,"%s\n", tempCatalog->name);
+                MovieRecord *tempMovie = tempCatalog->headMovie;
+                while(tempMovie != NULL)
+                {
+                    fprintf(fptr,"\t%s\n", tempMovie->movie->primaryTitle);
+                    tempMovie = tempMovie->next;
+                }
+                fprintf(fptr, "####\n");
+                tempCatalog = tempCatalog->next;
+                
+                
+            }
+        }
+        fclose(fptr);
+    }
+    
+    else
+    {
+        if(mCatalogNameList == NULL)
+        {
+            printf("No catalogs available\n");
+        }
+        else
+        {
+            MovieCatalog *tempCatalog = mCatalogNameList->headCatalog;
+            while (tempCatalog != NULL)
+            {
+                printf("%s\n", tempCatalog->name);
+                MovieRecord *tempMovie = tempCatalog->headMovie;
+                while(tempMovie != NULL)
+                {
+                    printf("\t%s\n", tempMovie->movie->primaryTitle);
+                    tempMovie = tempMovie->next;
+                }
+                printf( "####\n");
+                tempCatalog = tempCatalog->next;
+                
+                
+            }
         }
     }
-    fclose(fptr);
 }
 
 void readInLogFile(char *username)
@@ -149,6 +234,10 @@ void readInLogFile(char *username)
             }
         }while(fgets(catalogName, lineSize, fptr) != NULL);
     }
+    fclose(fptr);
+    
+    //clear the log file once you read everything in
+    fptr = fopen(filename, "w");
     fclose(fptr);
 }
 

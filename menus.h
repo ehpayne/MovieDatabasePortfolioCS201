@@ -24,9 +24,9 @@ extern void initialMenu(char *username);
 extern void initialMenuNewUser(char *username);
 extern void createMenu(char *username);
 extern void retrieveMenu(char *username);
-extern void updateMenu();
-extern void deleteMenu();
-extern void movieTitleSearchMenu(char *username, char *catalogName);
+extern void updateMenu(char *username);
+extern void deleteMenu(char *username);
+extern void movieTitleSearchMenu(char *username, char *catalogName, int searchType); //0 for catalog, 1 for search history
 extern void actorNameSearchMenu(char *username);
 extern void directorNameSearchMenu(char *username);
 extern void movieInfoMenu(TBasic *movie);
