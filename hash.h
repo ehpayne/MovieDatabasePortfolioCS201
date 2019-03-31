@@ -4,6 +4,8 @@
  *               a hash table by title.
  *              The corresponding titleID is then sent to BST for search
  */
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -11,34 +13,22 @@
 #include <ctype.h>
 #include <stddef.h>
 #include "readFiles.h"
-#include "storeData.h"
 
-//Entry is a struct for a hash table entry (contains a title (key) and a titleID)
-//When the user enters a title, the hash function will return an index and the
-//corresponfing title ID. The titleID will then be searched for in the BST to get
-//the rest of the necessary information
-typedef struct HashTableEntry Entry;
 
-struct HashTableEntry
-{
-    Entry *next;
-    char *title;
-    char *titleID;
-};
-
-//HTable is a struct for the hash table. It contains an array of Entries and a size
+//HTable is a struct for the hash table. It contains an array of TBasic and a size
 typedef struct HashTable HTable;
 
 struct HashTable
 {
     int size;
-    Entry **table;
+    TBasic **table;
 };
-Entry *newEntry(char *title, char *ID);
+extern HTable *tBasicHashTable;
+//Entry *newEntry(char *title, char *ID);
 HTable *newHashTable();
 unsigned int hashFunction(char *str);
 unsigned int doubleHashFunction(unsigned int oldIndex, char *str);
-void hashTableINSERT(int size, char *title, char *ID);
-char *hashTableSEARCH(char *title); //returns ID
+void TBasic_hashTableINSERT(int size, TBasic *tBasic);
+TBasic *hashTableSEARCH(char *title); //returns ID
 
 

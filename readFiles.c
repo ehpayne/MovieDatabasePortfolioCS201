@@ -11,7 +11,7 @@
 #include <ctype.h>
 #include <stddef.h>
 #include "readFiles.h"
-#include "storeData.h"
+#include "hash.h"
 
 
 //Constructor for TAlt structure
@@ -39,34 +39,21 @@ TAlt * newAltTitle()
 //Constructor for TBasic structure
 TBasic *newTitleBasics(int balance)
 {
-    //printf("IN CONSTRUCTOR\n");
     TBasic *titleBasics = malloc(sizeof(TBasic));
-    //printf("CREATED TITLE BASICS\n");
     titleBasics->ID = NULL;
-    //printf("ID\n");
     titleBasics->titleType = NULL;
-    //printf("TITLE TYPE\n");
     titleBasics->primaryTitle = NULL;
-    //printf("PRIMARY TITLE\n");
     titleBasics->originalTitle = NULL;
-    //printf("ORIGINAL TITLE\n");
     titleBasics->isAdult = 0; //non-adult;
-    //printf("IS ADULT\n");
     titleBasics->startYear = NULL;
-    //printf("START YEAR\n");
     titleBasics->endYear = NULL;
-    //printf("END YEAR\n");
     titleBasics->runtimeMinutes = 0;
-    //printf("RUNTIME MINUTES\n");
     titleBasics->genres = malloc(3 * sizeof(char*));
-    //printf("GENRES\n");
-    titleBasics->balance = balance;
-    //printf("BALANCE\n");
-    titleBasics->left = NULL;
-    titleBasics->right = NULL;
+    //titleBasics->balance = balance;
+    //titleBasics->left = NULL;
+    //titleBasics->right = NULL;
     titleBasics->next = NULL;
-    titleBasics->parent = NULL;
-    //printf("RETURN\n");
+    //titleBasics->parent = NULL;
     return titleBasics;
 }
 
@@ -337,7 +324,8 @@ void readTitleBasicsFile()
         //printf("Storing\n");
         //store the record into a BST
         
-        TBasicDataBST(titleBasics, size);
+        TBasic_hashTableINSERT(size, titleBasics);
+        //TBasicDataBST(titleBasics, size);
         
         //printf("Successful Store\n");
         //increase size

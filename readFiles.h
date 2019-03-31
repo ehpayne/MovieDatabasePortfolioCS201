@@ -36,8 +36,7 @@ struct title_basics
     char *endYear;                        //TV series end year (/N for all other title types)
     int runtimeMinutes;                //primary runtime of the title in minutes
     char **genres;                        //includes up to three genres associated with the title
-    int balance;
-    TBasic *left, *right, *next, *parent;
+    TBasic *next;
 };
 typedef struct title_execs TExecs;
 //contains the director and writer information for all the titles in IMDb

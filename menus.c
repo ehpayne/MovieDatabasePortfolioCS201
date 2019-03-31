@@ -9,9 +9,11 @@
 #include <string.h>
 #include <ctype.h>
 #include <stddef.h>
+#include "hash.h"
 #include "readFiles.h"
-#include "storeData.h"
 #include "menus.h"
+#include "createUpdateDelete.h"
+
 
 //the welcomeMenu function is the startup page for the database
 //it asks the user to either login or create a new user account
@@ -49,7 +51,7 @@ void newUserMenu()
 {
     char* username_input = malloc(sizeof(char*));
     char temp;
-    system("clear");
+
     printf("\n\nWELCOME!!\n\n");
     printf("Please create a username:\n");
     scanf("%c",&temp); //clear buffer by storing it into temp
@@ -66,9 +68,63 @@ void newUserMenu()
     printf("\n\nUSER CREATED\n\n");
     system("clear");
     printf("\n\nWELCOME NEW USER!\n\n");
-    initialMenu(username_input);
+    initialMenuNewUser(username_input);
 }
 
+//newUser creates a file containing all usernames and passwords
+void newUser(char *username, char *password)
+{
+    //file containing all user information
+    FILE *fptr = fopen("UserInfo.txt", "a");
+    //file print username and password
+    fprintf(fptr, "%s %s\n", username, password);
+    fclose(fptr);
+    
+    //creating a file for a user (username.log)
+    char*filename = malloc(strlen(username) + 4);
+    for(int i = 0; i <strlen(username); i++)
+    {
+        filename[i] = username[i];
+    }
+    filename[strlen(username)] = '.';
+    filename[strlen(username)+1] = 'l';
+    filename[strlen(username)+2] = 'o';
+    filename[strlen(username)+3] = 'g';
+    
+    FILE* fptr2 = fopen(filename, "a");
+    fclose (fptr2);
+}
+void initialMenuNewUser(char *username)
+{
+    char input;
+    do
+    {
+        printf("Would you like to: \n A. Create a catolog \n"
+               " B. Lookup a record \n C. Exit the database\n" );
+        scanf("%c",&input);
+        scanf("%c",&input);
+        input = tolower(input);
+        if(input == 'a')
+        {
+            //the user wants to create
+            createMenu(username);
+        }
+        else if(input == 'b')
+        {
+            //the user wants to lookup
+            retrieveMenu(username);
+        }
+        else if(input == 'c')
+        {
+            //the user wants to update
+            printf("Thank you for using the Movie Database.\n Goodbye!\n");
+        }
+        else
+        {
+            printf("Incorrect Input. Enter a letter A-C. Try Again\n\n");
+        }
+    }while(input != 'a' && input != 'b' && input != 'c');
+}
 //the loginMenu funciton asks the user to login to an existing user account
 //if the user information entered is correct, the user can proceed
 //else, they are asked to re-enter the correct information
@@ -80,6 +136,8 @@ void loginMenu()
     int userandPasswordFound = 0; //FALSE
     do
     {
+        FILE* fptr = fopen("UserInfo.txt", "r");
+
         //read in username
         char* username_input =  malloc(sizeof(char*));
         printf("\n\nUSERNAME:\n\n");
@@ -93,28 +151,15 @@ void loginMenu()
         scanf("%c",&temp); //clear buffer by storing it into temp
         scanf("%[^\n]",password_input);
         
-        //search for the username or password in the UserInfo.txt file
-        FILE* fptr = fopen("UserInfo.txt", "r");
         if(fptr == NULL)
         {
             printf("\n\nThere are no users. You must create a new user to proceed\n\n");
-            printf("Please create a username:\n");
-            scanf("%c",&temp); //clear buffer by storing it into temp
-            scanf("%[^\n]",username_input);
-            username_input = strlwr(username_input);
-            
-            char* password_input =  malloc(sizeof(char*));
-            printf("\n\nNow create a password (case sensitive):\n");
-            scanf("%c",&temp); //clear buffer by storing it into temp
-            scanf("%[^\n]",password_input);
-            
-            newUser(username_input, password_input);
-            
-            printf("\n\nUSER CREATED\n\n");
+            newUserMenu();
             system("clear");
-            printf("\n\nWELCOME NEW USER!\n\n");
             initialMenu(username_input);
         }
+        //search for the username or password in the UserInfo.txt file
+
         char *line = malloc(sizeof(char *));
         int lineSize = 1024;
         int onlyUsernameIsFound = 0; //FALSE
@@ -186,7 +231,6 @@ void initialMenu(char *username)
         }
         else if(input == 'b')
         {
-            printf("HERE 1\n");
             //the user wants to lookup
             retrieveMenu(username);
         }
@@ -202,14 +246,17 @@ void initialMenu(char *username)
         }
         else if(input == 'e')
         {
+            printf("Writing to your log file\n");
+            printInfoToLogFile(username);
             printf("Thank you for using the Movie Database.\n Goodbye!\n");
+            
         }
         else
         {
-            printf("Incorrect Input. Enter a letter A-D. Try Again\n\n");
+            printf("Incorrect Input. Enter a letter A-E. Try Again\n\n");
         }
     }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
-           &&input != 'e' && input != 'f' && input != 'g');
+           &&input != 'e');
     
 }
 void createMenu(char *username)
@@ -230,10 +277,8 @@ void createMenu(char *username)
         printf("What would you like to name your catalog?\n");
         scanf("%c",&temp); //clear buffer by storing it into temp
         scanf("%[^\n]",catalogName);
-        char *filename = appendFilename(username);
-        FILE *fptr = fopen(filename, "a");
-        fprintf(fptr, "%s\n", catalogName);
-        fclose(fptr);
+        
+        
         if(input == 'a')
         {
             printf("Would you like to add a movie to your catalog now?\n"
@@ -243,7 +288,7 @@ void createMenu(char *username)
             input = tolower(input);
             if(input == 'a')
             {
-                movieTitleSearchMenu(username);
+                movieTitleSearchMenu(username, catalogName);
             }
             else if(input == 'b')
             {
@@ -306,8 +351,7 @@ void retrieveMenu(char *username)
         input = tolower(input);
         if(input == 'a')
         {
-            readTitleBasicsFile();
-            movieTitleSearchMenu(username);
+            movieTitleSearchMenu(username, "Search History");
             
         }
         else if(input == 'b')
@@ -430,7 +474,7 @@ void deleteMenu()
     }while(input != 'a' && input != 'b' && input != 'c' &&
            input != 'd' && input != 'e' && input != 'f' && input != 'g');
 }
-void movieTitleSearchMenu(char *username)
+void movieTitleSearchMenu(char *username, char *catalogName)
 {
     char *movieTitle = malloc(sizeof(char*));
     char input;
@@ -438,11 +482,12 @@ void movieTitleSearchMenu(char *username)
     printf("Enter a movie title you would like to search for: \n");
     scanf("%c",&temp); //clear buffer by storing it into temp
     scanf("%[^\n]",movieTitle);
-    if(tBasicsRoot == NULL)
+    if(tBasicHashTable == NULL)
     {
         readTitleBasicsFile();
     }
-    TBasic *movie = searchTBasicBST(movieTitle);
+    TBasic * movie = hashTableSEARCH(movieTitle);;
+    //searchTBasicBST(movieTitle);
     
     if(movie == NULL)
     {
@@ -457,7 +502,7 @@ void movieTitleSearchMenu(char *username)
             scanf("%c",&temp); //clear buffer by storing it into temp
             scanf("%[^\n]",movieTitle);
             
-            TBasic *movie = searchTBasicBST(movieTitle);
+            movie = hashTableSEARCH(movieTitle);
             
             if(movie == NULL)
             {
@@ -475,14 +520,18 @@ void movieTitleSearchMenu(char *username)
     }
     else
     {
-        printf("Movie found!\n");
+        printf("\n\nMovie found!\n");
         movieInfoMenu(movie);
         printf("Would you like to add this movie to your catalog?\n"
                " A. Yes\n B. No\n");
         scanf("%c", &input);
+        scanf("%c", &input);
+        
         if(input == 'a')
         {
-            //add to array of movies
+            addMovieToCatalog(catalogName, movie);
+            printf("%s has been added to your %s catalog.\n", movieTitle, catalogName);
+            initialMenu(username);
         }
         else if(input == 'b')
         {
@@ -493,7 +542,7 @@ void movieTitleSearchMenu(char *username)
 
 void movieInfoMenu(TBasic *movie)
 {
-    printf("Movie Title: %s\n", movie->primaryTitle);
+    printf("\n\nMovie Title: %s\n", movie->primaryTitle);
     printf("Movie Type: %s\n", movie->titleType);
     printf("Year Released: %s\n", movie->startYear);
     printf("Runtime (minutes): %d\n", movie->runtimeMinutes);
@@ -519,6 +568,7 @@ void movieInfoMenu(TBasic *movie)
             break;
         }
     }
+    printf("\n");
 }
 
 char *strlwr(char *str)

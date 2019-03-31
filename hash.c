@@ -9,27 +9,28 @@
 #include <string.h>
 #include <ctype.h>
 #include <stddef.h>
+#include "menus.h"
 #include "readFiles.h"
-#include "storeData.h"
 #include "hash.h"
 
-HTable *hashTable;
-Entry *newEntry(char *title, char *ID)
-{
-    Entry *e = malloc(sizeof(Entry));
-    e->next = NULL;
-    //printf("Title: %s\n", title);
-    //printf("Title ID: %s\n", ID);
-    e->title = strndup(title, strlen(title) + 1);
-    e->titleID = strndup(ID, strlen(ID) + 1);
-    return e;
-}
-HTable *newHashTable()
+
+/*Entry *newEntry(char *title, char *ID)
+ {
+ Entry *e = malloc(sizeof(Entry));
+ e->next = NULL;
+ //printf("Title: %s\n", title);
+ //printf("Title ID: %s\n", ID);
+ e->title = strndup(title, strlen(title) + 1);
+ e->titleID = strndup(ID, strlen(ID) + 1);
+ return e;
+ }
+ */
+HTable *newHashTableTBasic()
 {
     HTable *ht = malloc(sizeof(HTable));
-    ht->size = 10000019; //10 million
+    ht->size = 18000000; //18 million
     
-    ht->table = malloc(ht->size * sizeof(Entry));
+    ht->table = malloc(ht->size * sizeof(TBasic));
     
     return ht;
 }
@@ -44,7 +45,7 @@ unsigned int hashFunction(char *str)
         {
             break;
         }
-        index = ((73 * index) * str[i]) % 10000019;
+        index = ((73 * index) * str[i]) % 18000000;
         //printf("index: %d\n", index);
     }
     //printf("leaving hash function\n");
@@ -61,38 +62,38 @@ unsigned int doubleHashFunction(unsigned int oldIndex, char *str)
         {
             break;
         }
-        newIndex = (newIndex + oldIndex) * str[i] % 10000019;
+        newIndex = ((newIndex * oldIndex) * str[i]) % 18000000;
     }
     return newIndex;
 }
 
-void hashTableINSERT(int size, char *title, char *ID)
+void TBasic_hashTableINSERT(int size, TBasic *entry)
 {
     //printf("here 3\n");
     //printf("***********HASH TABLE INSERT************\n");
     if(size == 0)
     {
         //printf("size == 0\n");
-        hashTable = newHashTable();
+        tBasicHashTable = newHashTableTBasic();
         //printf("table created\n");
     }
     //printf("creating entry now\n");
-    Entry *entry = newEntry(title, ID);
+    
     //printf("entry->title: %s\t entry->ID: %s\n", entry->title, entry->titleID);
-    unsigned int index = hashFunction(title);
+    unsigned int index = hashFunction(entry->primaryTitle);
     
     //printf("ORIGINAL INDEX: %u\n", index);
     
-    if(hashTable->table[index] != NULL)
+    if(tBasicHashTable->table[index] != NULL)
     {
         // printf("collision. double hash\n");
-        index = doubleHashFunction(index, title);
+        index = doubleHashFunction(index, entry->primaryTitle);
         //printf("NEW INDEX: %u\n", index);
-        if(hashTable->table[index] != NULL)
+        if(tBasicHashTable->table[index] != NULL)
         {
             //printf("slot already filled\n");
-            Entry *temp = hashTable->table[index];
-            Entry *back = NULL;
+            TBasic *temp = tBasicHashTable->table[index];
+            TBasic *back = NULL;
             while(temp != NULL)
             {
                 //printf("going next\n");
@@ -101,69 +102,92 @@ void hashTableINSERT(int size, char *title, char *ID)
             }
             //printf("attaching new entry\n");
             back->next = entry;
+            //printf("%s:%s = %d\t Actual Primary: %luTable Primary:%lu:\n",
+            //       entry->ID,entry->primaryTitle, index, strlen(entry->primaryTitle),
+            //       strlen(back->next->primaryTitle));
         }
         else
         {
             //printf("new index empty. inserting value\n");
-            hashTable->table[index] = entry;
+            tBasicHashTable->table[index] = entry;
+            //printf("%s:%s = %d\t Actual Primary: %luTable Primary:%lu:\n",
+            //      entry->ID,entry->primaryTitle, index, strlen(entry->primaryTitle),
+            //      strlen(tBasicHashTable->table[index]->primaryTitle));
+            
         }
         
     }
     else
     {
         //printf("no collision. inserting value\n");
-        hashTable->table[index] = entry;
+        tBasicHashTable->table[index] = entry;
+        //printf("%s:%s = %d\t Actual Primary: %luTable Primary:%lu:\n",
+        //      entry->ID,entry->primaryTitle, index, strlen(entry->primaryTitle),
+        //      strlen(tBasicHashTable->table[index]->primaryTitle));
     }
+    
 }
 
-char *hashTableSEARCH(char *title)
+TBasic *hashTableSEARCH(char *title)
 {
     //first possible location of the entry
     unsigned int possibleIndex1 = hashFunction(title);
-    unsigned long entryLength;
+    unsigned long entryLength = 0;
     unsigned long inputLength = strlen(title);
-    if(hashTable != NULL)
+    if(tBasicHashTable != NULL)
     {
-        entryLength = strlen(hashTable->table[possibleIndex1]->title);
+        entryLength = strlen(tBasicHashTable->table[possibleIndex1]->primaryTitle);
         //if it's there, great! Return the titleID
         if(entryLength == inputLength &&
-           strcmp(hashTable->table[possibleIndex1]->title, title) == 0)
+           strcmp(tBasicHashTable->table[possibleIndex1]->primaryTitle, title) == 0)
         {
-            return hashTable->table[possibleIndex1]->titleID;
+            return tBasicHashTable->table[possibleIndex1];
+        }
+        else if(tBasicHashTable->table[possibleIndex1] == NULL)
+        {
+            return NULL;
         }
         //it's not at the first location. Keep looking
         else
         {
             //second possible location of the entry
             unsigned int possibleIndex2 = doubleHashFunction(possibleIndex1, title);
-            entryLength = strlen(hashTable->table[possibleIndex2]->title);
+            entryLength = strlen(tBasicHashTable->table[possibleIndex2]->primaryTitle);
             //if it's there, return the titleID
             if(entryLength == inputLength &&
-               strcmp(hashTable->table[possibleIndex2]->title, title) == 0)
+               strcmp(tBasicHashTable->table[possibleIndex2]->primaryTitle, title) == 0)
             {
-                return hashTable->table[possibleIndex2]->titleID;
+                return tBasicHashTable->table[possibleIndex2];
+            }
+            else if(tBasicHashTable->table[possibleIndex2] == NULL)
+            {
+                return NULL;
             }
             //else keep going next until you find it
             else
             {
-                Entry *temp = hashTable->table[possibleIndex2];
-                entryLength = strlen(temp->title);
-                while(temp != NULL && strcmp(temp->title, title) != 0)
+                TBasic *temp = tBasicHashTable->table[possibleIndex2];
+                entryLength = strlen(temp->primaryTitle);
+                while(temp != NULL && strcmp(temp->primaryTitle, title) != 0)
                 {
                     temp = temp->next;
                 }
                 if(temp == NULL)
                 {
-                    return "NOT FOUND";
+                    return NULL;
                 }
                 else
                 {
-                    return temp->titleID;
+                    return temp;
                     
                 }
             } //else not at the second location
             
         }//else it's not at the first location
     }// if table != NULL
-    return "NOT FOUND";
+    else
+    {
+        return NULL;
+    }
+    
 }

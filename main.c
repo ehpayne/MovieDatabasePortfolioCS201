@@ -9,10 +9,13 @@
 #include <string.h>
 #include <ctype.h>
 #include <stddef.h>
-#include "readFiles.h"
-#include "storeData.h"
+#include "hash.h"
 #include "menus.h"
-TBasic *tBasicsRoot = NULL;
+#include "readFiles.h"
+#include "createUpdateDelete.h"
+
+HTable *tBasicHashTable = NULL;
+MovieCatalogList *mCatalogNameList = NULL;
 
 int main()
 {
