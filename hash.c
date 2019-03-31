@@ -34,7 +34,7 @@ HTable *newHashTable()
     return ht;
 }
 
-unsigned int hashFunction(char *str, int size)
+unsigned int hashFunction(char *str)
 {
     //printf("IN HASH FUNCTION\n");
     unsigned int index = 7717; //prime number
@@ -44,14 +44,14 @@ unsigned int hashFunction(char *str, int size)
         {
             break;
         }
-        index = ((73 * index) * str[i]) % size;
+        index = ((73 * index) * str[i]) % 10000019;
         //printf("index: %d\n", index);
     }
     //printf("leaving hash function\n");
     return index;
 }
 
-unsigned int doubleHashFunction(unsigned int oldIndex, char *str, int size)
+unsigned int doubleHashFunction(unsigned int oldIndex, char *str)
 {
     unsigned int newIndex = 11831;
     
@@ -61,7 +61,7 @@ unsigned int doubleHashFunction(unsigned int oldIndex, char *str, int size)
         {
             break;
         }
-        newIndex = (newIndex + oldIndex) * str[i] %size;
+        newIndex = (newIndex + oldIndex) * str[i] % 10000019;
     }
     return newIndex;
 }
@@ -79,14 +79,14 @@ void hashTableINSERT(int size, char *title, char *ID)
     //printf("creating entry now\n");
     Entry *entry = newEntry(title, ID);
     //printf("entry->title: %s\t entry->ID: %s\n", entry->title, entry->titleID);
-    unsigned int index = hashFunction(title, hashTable->size);
+    unsigned int index = hashFunction(title);
     
     //printf("ORIGINAL INDEX: %u\n", index);
-        
+    
     if(hashTable->table[index] != NULL)
     {
-       // printf("collision. double hash\n");
-        index = doubleHashFunction(index, title, hashTable->size);
+        // printf("collision. double hash\n");
+        index = doubleHashFunction(index, title);
         //printf("NEW INDEX: %u\n", index);
         if(hashTable->table[index] != NULL)
         {
@@ -114,4 +114,56 @@ void hashTableINSERT(int size, char *title, char *ID)
         //printf("no collision. inserting value\n");
         hashTable->table[index] = entry;
     }
+}
+
+char *hashTableSEARCH(char *title)
+{
+    //first possible location of the entry
+    unsigned int possibleIndex1 = hashFunction(title);
+    unsigned long entryLength;
+    unsigned long inputLength = strlen(title);
+    if(hashTable != NULL)
+    {
+        entryLength = strlen(hashTable->table[possibleIndex1]->title);
+        //if it's there, great! Return the titleID
+        if(entryLength == inputLength &&
+           strcmp(hashTable->table[possibleIndex1]->title, title) == 0)
+        {
+            return hashTable->table[possibleIndex1]->titleID;
+        }
+        //it's not at the first location. Keep looking
+        else
+        {
+            //second possible location of the entry
+            unsigned int possibleIndex2 = doubleHashFunction(possibleIndex1, title);
+            entryLength = strlen(hashTable->table[possibleIndex2]->title);
+            //if it's there, return the titleID
+            if(entryLength == inputLength &&
+               strcmp(hashTable->table[possibleIndex2]->title, title) == 0)
+            {
+                return hashTable->table[possibleIndex2]->titleID;
+            }
+            //else keep going next until you find it
+            else
+            {
+                Entry *temp = hashTable->table[possibleIndex2];
+                entryLength = strlen(temp->title);
+                while(temp != NULL && strcmp(temp->title, title) != 0)
+                {
+                    temp = temp->next;
+                }
+                if(temp == NULL)
+                {
+                    return "NOT FOUND";
+                }
+                else
+                {
+                    return temp->titleID;
+                    
+                }
+            } //else not at the second location
+            
+        }//else it's not at the first location
+    }// if table != NULL
+    return "NOT FOUND";
 }

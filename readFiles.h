@@ -2,7 +2,7 @@
  * Author: Elizabeth Payne
  * File: readFiles.h
  * Description: This is the header file to read in all the data files and
- *							assign the information to the corresponding variable.
+ *                            assign the information to the corresponding variable.
  */
 
 #include <stdio.h>
@@ -123,4 +123,4 @@ extern void readNameBasicsFile();
 
 //0x656d726143096174
 //0x7327646c726f5720
- //0x30000000006e616c
+//0x30000000006e616c

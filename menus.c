@@ -188,7 +188,7 @@ void initialMenu(char *username)
         {
             printf("HERE 1\n");
             //the user wants to lookup
-            retrieveMenu();
+            retrieveMenu(username);
         }
         else if(input == 'c')
         {
@@ -292,48 +292,29 @@ void createMenu(char *username)
         }
     }while(input != 'a' && input != 'b' && input != 'c');
 }
-void retrieveMenu()
+void retrieveMenu(char *username)
 {
     char input;
     do
     {
         printf("What type of data would you like to lookup? \n"
-               " A. Alternative Titles \n B. Basic Title Info \n"
-               " C. Directors/Writers \n D. Episode Info \n"
-               " E. Title Actors/Crew \n F. Rating Info \n G. Name Info\n");
+               " A. Movie Title \n"
+               " B. Directors/Writers \n"
+               " C. Name Info\n");
         scanf("%c",&input);
         scanf("%c",&input);
         input = tolower(input);
         if(input == 'a')
         {
-            readAltTitlesFile();
+            readTitleBasicsFile();
+            movieTitleSearchMenu(username);
+            
         }
         else if(input == 'b')
         {
-            readTitleBasicsFile();
-            
+            readTitleExecsFile();
         }
         else if(input == 'c')
-        {
-            readTitleExecsFile();
-            
-        }
-        else if(input == 'd')
-        {
-            readTitleEpisodeFile();
-            
-        }
-        else if(input == 'e')
-        {
-            readTitleCrewFile();
-            
-        }
-        else if(input == 'f')
-        {
-            readTitleRatingFile();
-            
-        }
-        else if(input == 'g')
         {
             readNameBasicsFile();
         }
@@ -342,8 +323,7 @@ void retrieveMenu()
             printf("Incorrect Input. Enter a letter A-G. Try Again.\n\n");
             
         }
-    }while(input != 'a' && input != 'b' && input != 'c' && input != 'd'
-           &&input != 'e' && input != 'f' && input != 'g');
+    }while(input != 'a' && input != 'b' && input != 'c');
 }
 
 void updateMenu()
@@ -455,10 +435,13 @@ void movieTitleSearchMenu(char *username)
     char *movieTitle = malloc(sizeof(char*));
     char input;
     char temp;
-    printf("Enter a movie title you would like to add to your catalog\n");
+    printf("Enter a movie title you would like to search for: \n");
     scanf("%c",&temp); //clear buffer by storing it into temp
     scanf("%[^\n]",movieTitle);
-    readTitleBasicsFile();
+    if(tBasicsRoot == NULL)
+    {
+        readTitleBasicsFile();
+    }
     TBasic *movie = searchTBasicBST(movieTitle);
     
     if(movie == NULL)
@@ -470,7 +453,7 @@ void movieTitleSearchMenu(char *username)
         while(input == 'a')
         {
             char *movieTitle = malloc(sizeof(char*));
-            printf("Enter a movie title you would like to add to your catalog\n");
+            printf("Enter a movie title you would like to search for:\n");
             scanf("%c",&temp); //clear buffer by storing it into temp
             scanf("%[^\n]",movieTitle);
             
@@ -494,12 +477,12 @@ void movieTitleSearchMenu(char *username)
     {
         printf("Movie found!\n");
         movieInfoMenu(movie);
-        printf("Are you sure you want to add this movie to your catalog?\n"
+        printf("Would you like to add this movie to your catalog?\n"
                " A. Yes\n B. No\n");
         scanf("%c", &input);
         if(input == 'a')
         {
-           //add to array of movies
+            //add to array of movies
         }
         else if(input == 'b')
         {
@@ -564,8 +547,3 @@ char *appendFilename(char *username)
     return filename;
 }
 
-int main()
-{
-    welcomeMenu();
-    return 0;
-}

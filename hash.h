@@ -36,8 +36,8 @@ struct HashTable
 };
 Entry *newEntry(char *title, char *ID);
 HTable *newHashTable();
-unsigned int hashFunction(char *str, int size);
-unsigned int doubleHashFunction(unsigned int oldIndex, char *str, int size);
+unsigned int hashFunction(char *str);
+unsigned int doubleHashFunction(unsigned int oldIndex, char *str);
 void hashTableINSERT(int size, char *title, char *ID);
 char *hashTableSEARCH(char *title); //returns ID
 

@@ -6,8 +6,10 @@
 #pragma once
 #include <stdio.h>
 #include "readFiles.h"
-
-typedef struct HashTableElement HTElement;
+TAlt *tAltRoot;
+TBasic *tBasicsRoot;
+TExecs *tExecsRoot;
+NBasic *nBasicRoot;
 
 //trees for storing structures
 extern void TAltDataBST(TAlt *alt, int size);

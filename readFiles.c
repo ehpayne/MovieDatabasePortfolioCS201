@@ -17,32 +17,32 @@
 //Constructor for TAlt structure
 TAlt * newAltTitle()
 {
-	TAlt* altTitle = malloc(sizeof(TAlt));
-
-	altTitle->ID = "";
-	altTitle->ordering = 0;
-	altTitle->title = "";
-	altTitle->region = "";
-	altTitle->language = "";
-	altTitle->type = "";
-	altTitle->isOriginalTitle = 0;
-	altTitle->size = 0;
+    TAlt* altTitle = malloc(sizeof(TAlt));
+    
+    altTitle->ID = "";
+    altTitle->ordering = 0;
+    altTitle->title = "";
+    altTitle->region = "";
+    altTitle->language = "";
+    altTitle->type = "";
+    altTitle->isOriginalTitle = 0;
+    altTitle->size = 0;
     altTitle->left = NULL;
     altTitle->right = NULL;
     altTitle->next = NULL;
     altTitle->parent = NULL;
     
-
-	return altTitle;
+    
+    return altTitle;
 }
 
 //Constructor for TBasic structure
 TBasic *newTitleBasics(int balance)
 {
     //printf("IN CONSTRUCTOR\n");
-	TBasic *titleBasics = malloc(sizeof(TBasic));
+    TBasic *titleBasics = malloc(sizeof(TBasic));
     //printf("CREATED TITLE BASICS\n");
-	titleBasics->ID = NULL;
+    titleBasics->ID = NULL;
     //printf("ID\n");
     titleBasics->titleType = NULL;
     //printf("TITLE TYPE\n");
@@ -50,13 +50,13 @@ TBasic *newTitleBasics(int balance)
     //printf("PRIMARY TITLE\n");
     titleBasics->originalTitle = NULL;
     //printf("ORIGINAL TITLE\n");
-	titleBasics->isAdult = 0; //non-adult;
+    titleBasics->isAdult = 0; //non-adult;
     //printf("IS ADULT\n");
     titleBasics->startYear = NULL;
     //printf("START YEAR\n");
     titleBasics->endYear = NULL;
     //printf("END YEAR\n");
-	titleBasics->runtimeMinutes = 0;
+    titleBasics->runtimeMinutes = 0;
     //printf("RUNTIME MINUTES\n");
     titleBasics->genres = malloc(3 * sizeof(char*));
     //printf("GENRES\n");
@@ -67,99 +67,99 @@ TBasic *newTitleBasics(int balance)
     titleBasics->next = NULL;
     titleBasics->parent = NULL;
     //printf("RETURN\n");
-	return titleBasics;
+    return titleBasics;
 }
 
 //Constructor for TExecs structure
 TExecs *newTitleExecs()
 {
-	TExecs *execs = malloc(sizeof(TExecs));
-
-	execs->ID = "";
-	execs->directors = (char**)malloc(40 * sizeof(char*));
-	execs->writers = (char**)malloc(65 * sizeof(char*));
-	execs->size = 0;
+    TExecs *execs = malloc(sizeof(TExecs));
+    
+    execs->ID = "";
+    execs->directors = (char**)malloc(40 * sizeof(char*));
+    execs->writers = (char**)malloc(65 * sizeof(char*));
+    execs->size = 0;
     execs->left = NULL;
     execs->right = NULL;
     execs->next = NULL;
     execs->parent = NULL;
-
-	return execs;
+    
+    return execs;
 }
 
 //Constructor for TEpisode structure
 TEpisode *newTitleEpisode()
 {
-	TEpisode *episode = malloc(sizeof(TEpisode));
-
-	episode->ID = "";
-	episode->titleID = "";
-	episode->seasonNumber = 0;
-	episode->episodeNumber = 0;
-	episode->size = 0;
+    TEpisode *episode = malloc(sizeof(TEpisode));
+    
+    episode->ID = "";
+    episode->titleID = "";
+    episode->seasonNumber = 0;
+    episode->episodeNumber = 0;
+    episode->size = 0;
     episode->left = NULL;
     episode->right = NULL;
     episode->next = NULL;
     episode->parent = NULL;
-
-	return episode;
+    
+    return episode;
 }
 
 //Constructor for TCrew structure
 TCrew *newTitleCrew()
 {
-	TCrew *crew = malloc(sizeof(TCrew));
-
-	crew->ID = "";
-	crew->ordering = 0;
-	crew->nameID = "";
-	crew->category = "";
-	crew->job = "";
-	crew->characterName = "";
-	crew->size = 0;
+    TCrew *crew = malloc(sizeof(TCrew));
+    
+    crew->ID = "";
+    crew->ordering = 0;
+    crew->nameID = "";
+    crew->category = "";
+    crew->job = "";
+    crew->characterName = "";
+    crew->size = 0;
     crew->left = NULL;
     crew->right = NULL;
     crew->next = NULL;
     crew->parent = NULL;
-
-	return crew;
+    
+    return crew;
 }
 
 //Constructor for TRating structure
 TRating *newTitleRating()
 {
-	TRating *rating = malloc(sizeof(TRating));
-
-	rating->ID = "";
-	rating->avgRating = 0.0;
-	rating->numVotes = 0;
-	rating->size = 0;
+    TRating *rating = malloc(sizeof(TRating));
+    
+    rating->ID = "";
+    rating->avgRating = 0.0;
+    rating->numVotes = 0;
+    rating->size = 0;
     rating->left = NULL;
     rating->right = NULL;
     rating->next = NULL;
     rating->parent = NULL;
-
-	return rating;
+    
+    return rating;
 }
 
 //Constructor for NBasic structure
 NBasic *newNameBasics()
 {
-	NBasic *nameBasics = malloc(sizeof(NBasic));
-
-	nameBasics->ID = "";
-	nameBasics->primaryName = "";
-	nameBasics->birthYear = "YYYY";
-	nameBasics->deathYear = "YYYY";
-	nameBasics->primeProfession = (char**)malloc(3 * sizeof(char*));
-	nameBasics->knownForTitles = (char**)malloc(4 * sizeof(char*));
-	nameBasics->size = 0;
+    NBasic *nameBasics = malloc(sizeof(NBasic));
+    
+    nameBasics->ID = "";
+    nameBasics->primaryName = "";
+    nameBasics->birthYear = "YYYY";
+    nameBasics->deathYear = "YYYY";
+    nameBasics->primeProfession = (char**)malloc(3 * sizeof(char*));
+    nameBasics->knownForTitles = (char**)malloc(4 * sizeof(char*));
+    nameBasics->size = 0;
     nameBasics->left = NULL;
     nameBasics->right = NULL;
     nameBasics->next = NULL;
     nameBasics->parent = NULL;
-
-	return nameBasics;
+    
+    return nameBasics;
 }
 
 //reads in the title.akas TSV file and assigns the information to the
@@ -167,21 +167,21 @@ NBasic *newNameBasics()
 void readAltTitlesFile()
 {
     TAlt *altTitle = newAltTitle();
-	char *line = malloc(sizeof(char *));
-	char *tab = "\t";
-	int lineSize = 1024;
-
-	FILE *fptr = fopen("title.akas.tsv", "r");
-	if(fptr == NULL)
-	{
-		perror("Error: ");
-	}
+    char *line = malloc(sizeof(char *));
+    char *tab = "\t";
+    int lineSize = 1024;
+    
+    FILE *fptr = fopen("title.akas.tsv", "r");
+    if(fptr == NULL)
+    {
+        perror("Error: ");
+    }
     //read in the header line
-	fgets(line, lineSize, fptr);
+    fgets(line, lineSize, fptr);
     
     //while !EOF get a line and parse the data
-	while (fgets(line, lineSize, fptr) != NULL)
-	{
+    while (fgets(line, lineSize, fptr) != NULL)
+    {
         char *copy = strdup(line);
         
         char *token = strtok(copy, tab);
@@ -209,16 +209,16 @@ void readAltTitlesFile()
         altTitle->isOriginalTitle = atoi(token);
         
         //TAltDataBST(altTitle, altTitle->size);
-
-		altTitle->size++;
-
-		if(feof(fptr))
-		{
-			break;
-		}
-	}
-
-	fclose(fptr);
+        
+        altTitle->size++;
+        
+        if(feof(fptr))
+        {
+            break;
+        }
+    }
+    
+    fclose(fptr);
 }
 
 //reads in the title.basics TSV file and assigns the information to the
@@ -230,23 +230,23 @@ void readTitleBasicsFile()
     int size = 0;
     int balance = 0;
     int lineSize = 3000;
-	char *line = malloc(lineSize * sizeof(char));
+    char *line = malloc(lineSize * sizeof(char));
     
-	char *tab = "\t";
-	
-
+    char *tab = "\t";
+    
+    
     //open the file
-	FILE *fptr = fopen("title.basics.tsv", "r");
-	if(fptr == NULL)
-	{
-		perror("Error: ");
-	}
+    FILE *fptr = fopen("title.basics.tsv", "r");
+    if(fptr == NULL)
+    {
+        perror("Error: ");
+    }
     //read in the header line (not used)
-	fgets(line, lineSize, fptr);
+    fgets(line, lineSize, fptr);
     //printf("HERE 3\n");
     //while !EOF read a line and parse the data
-	while (fgets(line, lineSize, fptr) != NULL)
-	{
+    while (fgets(line, lineSize, fptr) != NULL)
+    {
         //printf("^^^^^^^^^^^^^^^^READ FILE^^^^^^^^^^^^^^^^^\n");
         //printf("HERE 4\n");
         //printf("line: %s\n", line);
@@ -315,7 +315,7 @@ void readTitleBasicsFile()
         //printf("\t genre 0:%s\n", subtoken);
         titleBasics->genres[0] = strndup(subtoken, (strlen(subtoken) + 1));
         //printf("STRCPY: strlen(subtoken): %lu, strlen(genre[0]): %lu\n",
-               //strlen(subtoken),strlen(titleBasics->genres[0]));
+        //strlen(subtoken),strlen(titleBasics->genres[0]));
         for(int i = 1; i <=2; i++)
         {
             subtoken = strtok(NULL, ",");
@@ -337,20 +337,20 @@ void readTitleBasicsFile()
         //printf("Storing\n");
         //store the record into a BST
         
-       TBasicDataBST(titleBasics, size);
+        TBasicDataBST(titleBasics, size);
         
         //printf("Successful Store\n");
         //increase size
-		size++;
-
-		if(feof(fptr))
-		{
-			break;
-		}
-	}
+        size++;
+        
+        if(feof(fptr))
+        {
+            break;
+        }
+    }
     //printf("SIZE: %d\n", size);
     //close file
-	fclose(fptr);
+    fclose(fptr);
     free(line);
 }
 
@@ -359,23 +359,23 @@ void readTitleBasicsFile()
 void readTitleExecsFile()
 {
     TExecs *execs = newTitleExecs();
-	char *line = malloc(sizeof(char *));
-	char *tab = "\t";
-	int lineSize = 1024;
-
-	FILE *fptr;
+    char *line = malloc(sizeof(char *));
+    char *tab = "\t";
+    int lineSize = 1024;
+    
+    FILE *fptr;
     //open the file
-	fptr = fopen("title.crew.tsv", "r");
-	if(fptr == NULL)
-	{
-		perror("Error: ");
-	}
+    fptr = fopen("title.crew.tsv", "r");
+    if(fptr == NULL)
+    {
+        perror("Error: ");
+    }
     //get the header line (useless data)
-	fgets(line, lineSize, fptr);
-	
+    fgets(line, lineSize, fptr);
+    
     //while !EOF get a line and parse the data based on tabs
-	while (fgets(line, lineSize, fptr) != NULL)
-	{
+    while (fgets(line, lineSize, fptr) != NULL)
+    {
         char *copy = strdup(line);
         
         char *token = strtok(copy, tab);
@@ -408,7 +408,7 @@ void readTitleExecsFile()
                 strcpy(execs->directors[i], subtoken);
             }
         }
-
+        
         copy = strdup(w_token);
         //parse the writers token based on commas
         //printf("here 4\n");
@@ -433,43 +433,43 @@ void readTitleExecsFile()
             }
         }
         //store the record in a BST
-		//TExecsDataBST(execs, execs->size);
+        //TExecsDataBST(execs, execs->size);
         //printf("HERE!\n");
         //increase size
-		execs->size++;
+        execs->size++;
         
-		if(feof(fptr))
-		{
-			break;
-		}
+        if(feof(fptr))
+        {
+            break;
+        }
         
-	}
+    }
     //close the file
-	fclose(fptr);
+    fclose(fptr);
 }
 //reads in the title.episode TSV file and assigns the information to the
 //corresponding variable
 void readTitleEpisodeFile()
 {
     TEpisode *episode = newTitleEpisode();
-	char *line = malloc(sizeof(char *));
-	char *tab = "\t";
-	int lineSize = 1024;
-
-	FILE *fptr;
-
-	fptr = fopen("title.episode.tsv", "r");
-	if(fptr == NULL)
-	{
-		perror("Error: ");
-	}
+    char *line = malloc(sizeof(char *));
+    char *tab = "\t";
+    int lineSize = 1024;
+    
+    FILE *fptr;
+    
+    fptr = fopen("title.episode.tsv", "r");
+    if(fptr == NULL)
+    {
+        perror("Error: ");
+    }
     //get the header line (not used)
-	fgets(line, lineSize, fptr);
-	//printf("line:%s\n", line);
+    fgets(line, lineSize, fptr);
+    //printf("line:%s\n", line);
     
     //while !EOF, get a line and parse the data based on tabs
-	while (fgets(line, lineSize, fptr) != NULL)
-	{
+    while (fgets(line, lineSize, fptr) != NULL)
+    {
         char *copy = strdup(line);
         
         char *token = strtok(copy, tab);
@@ -483,43 +483,43 @@ void readTitleEpisodeFile()
         
         token = strtok(copy, tab);
         episode->episodeNumber = atoi(token);
-
+        
         //store the record in a BST
         //TEpisodeDataBST(episode, episode->size);
         
         //increase the size
-		episode->size++;
-
-		if(feof(fptr))
-		{
-			break;
-		}
-	}
+        episode->size++;
+        
+        if(feof(fptr))
+        {
+            break;
+        }
+    }
     //close the file
-	fclose(fptr);
+    fclose(fptr);
 }
 //reads in the title.principals TSV file and assigns the information to the
 //corresponding variable
 void readTitleCrewFile()
 {
     TCrew *crew = newTitleCrew();
-	char *line = malloc(sizeof(char *));
-	char *tab = "\t";
-	int lineSize = 1024;
-
-	FILE *fptr;
-
-	fptr = fopen("title.principals.tsv", "r");
-	if(fptr == NULL)
-	{
-		perror("Error: ");
-	}
+    char *line = malloc(sizeof(char *));
+    char *tab = "\t";
+    int lineSize = 1024;
+    
+    FILE *fptr;
+    
+    fptr = fopen("title.principals.tsv", "r");
+    if(fptr == NULL)
+    {
+        perror("Error: ");
+    }
     //get the header line (not used)
-	fgets(line, lineSize, fptr);
-	
+    fgets(line, lineSize, fptr);
+    
     //while !EOF, get a line and parse the data based on the tabs
-	while (fgets(line, lineSize, fptr) != NULL)
-	{
+    while (fgets(line, lineSize, fptr) != NULL)
+    {
         char *copy = strdup(line);
         
         char *token = strtok(copy, tab);
@@ -541,15 +541,15 @@ void readTitleCrewFile()
         //TCrewDataBST(crew, crew->size);
         
         //increase size
-		crew->size++;
-
-		if(feof(fptr))
-		{
-			break;
-		}
-	}
+        crew->size++;
+        
+        if(feof(fptr))
+        {
+            break;
+        }
+    }
     //close the file
-	fclose(fptr);
+    fclose(fptr);
 }
 //reads in the title.ratings TSV file and assigns the information to the
 //corresponding variable
