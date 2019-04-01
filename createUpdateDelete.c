@@ -119,6 +119,7 @@ void updateMovieCatalog(char *username, char *catalogName, char *title)
     {
         printf("Catalog was not found\n");
         initialMenu(username);
+        return;
     }
     
 }
@@ -127,36 +128,38 @@ void deleteMovieCatalog(char *username, char *catalogName)
 {
     MovieCatalog *tempCatalog = mCatalogNameList->headCatalog;
     MovieCatalog *back = NULL;
-    while(tempCatalog != NULL)
+    //deleting the head or the only node
+    if(tempCatalog != NULL && strcmp(tempCatalog->name, catalogName) == 0)
+    {
+        mCatalogNameList->headCatalog = tempCatalog->next;
+        return;
+    }
+    while(tempCatalog != NULL && strcmp(tempCatalog->name, catalogName) != 0)
     {
         back = tempCatalog;
-        if(strcmp(tempCatalog->name, catalogName) == 0)
-        {
-            back->next = tempCatalog->next;
-            tempCatalog->next = NULL;
-            break;
-        }
         tempCatalog = tempCatalog->next;
     }
     if(tempCatalog == NULL)
     {
         printf("Catalog was not found\n");
         initialMenu(username);
+        return;
     }
-    
+    back->next = tempCatalog->next;
 }
 
 void printInfo(char *username, int printType)
 {
     
+    
     if(printType == 0)
     {
         char *filename = appendFilename(username);
-        FILE *fptr = fopen(filename, "a");
-        
+        //clear the log file before you print
+        FILE *fptr = fopen(filename, "w");
         if(mCatalogNameList == NULL)
         {
-            fprintf(fptr, "####\n");
+            //do nothing
         }
         else
         {
@@ -197,8 +200,9 @@ void printInfo(char *username, int printType)
                     printf("\t%s\n", tempMovie->movie->primaryTitle);
                     tempMovie = tempMovie->next;
                 }
-                printf( "####\n");
+                
                 tempCatalog = tempCatalog->next;
+                printf( "####\n");
                 
                 
             }
@@ -212,32 +216,33 @@ void readInLogFile(char *username)
     FILE *fptr = fopen(filename, "r");
     char *title = malloc(sizeof(char *));
     int lineSize = 250;
+    char *titleCopy = malloc(sizeof(char*));
     
-    if(fgets(title, lineSize, fptr) != NULL && strcmp(title, "####\n") == 0)
+    char *catalogName = malloc(sizeof(char *));
+    while(fgets(catalogName, lineSize, fptr) != NULL)
     {
-        //do nothing
-    }
-    else
-    {
-        char *catalogName = malloc(sizeof(char *));
-        do
+        //fgets(catalogName, lineSize, fptr);
+        char *catalogCopy = strdup(catalogName);
+        catalogCopy[strlen(catalogCopy)-1] = 0;
+        while(fgetc(fptr) != 0 && fgets(title, lineSize, fptr) != NULL && strcmp(title, "###\n") )
         {
-            fgets(catalogName, lineSize, fptr);
-            while(fgets(title, lineSize, fptr) != NULL && strcmp(title, "####\n") != 0)
+            titleCopy = strdup(title);
+            //remove the newline character
+            titleCopy[strlen(titleCopy)-1] = 0;
+            
+            if(tBasicHashTable == NULL)
             {
-                TBasic *movie = hashTableSEARCH(title);
-                addMovieToCatalog(catalogName, movie);
+                readTitleBasicsFile();
             }
-            if(feof(fptr))
-            {
-                break;
-            }
-        }while(fgets(catalogName, lineSize, fptr) != NULL);
+            TBasic *movie = hashTableSEARCH(titleCopy);
+            addMovieToCatalog(catalogCopy, movie);
+        }
+        if(feof(fptr))
+        {
+            break;
+        }
     }
     fclose(fptr);
     
-    //clear the log file once you read everything in
-    fptr = fopen(filename, "w");
-    fclose(fptr);
 }
 

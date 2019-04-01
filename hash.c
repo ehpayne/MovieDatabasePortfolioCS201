@@ -14,17 +14,6 @@
 #include "hash.h"
 
 
-/*Entry *newEntry(char *title, char *ID)
- {
- Entry *e = malloc(sizeof(Entry));
- e->next = NULL;
- //printf("Title: %s\n", title);
- //printf("Title ID: %s\n", ID);
- e->title = strndup(title, strlen(title) + 1);
- e->titleID = strndup(ID, strlen(ID) + 1);
- return e;
- }
- */
 HTable *newHashTableTBasic()
 {
     HTable *ht = malloc(sizeof(HTable));

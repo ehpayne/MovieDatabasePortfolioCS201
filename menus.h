@@ -27,11 +27,7 @@ extern void retrieveMenu(char *username);
 extern void updateMenu(char *username);
 extern void deleteMenu(char *username);
 extern void movieTitleSearchMenu(char *username, char *catalogName, int searchType); //0 for catalog, 1 for search history
-extern void actorNameSearchMenu(char *username);
-extern void directorNameSearchMenu(char *username);
 extern void movieInfoMenu(TBasic *movie);
-extern void actorInfoMenu(NBasic *actor);
-extern void directorInfoMenu(TExecs *director);
 
 
 //manipulate strings
