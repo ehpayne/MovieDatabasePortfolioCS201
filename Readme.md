@@ -3,7 +3,7 @@ Project: Movie Catalog
 
 GitHub Repository: https://github.com/ehpayne/MovieDatabasePortfolioCS201.git
 Data File Download Link: https://www.imdb.com/interfaces/
-Video Tutorial: 
+Video Tutorial: https://youtu.be/XV2HUpuDNQU
 
 INSTRUCTIONS:
 1. Download and decompress the zipped version of the portfolio from Blackboard
