@@ -80,7 +80,7 @@ void readTitleBasicsFile()
         //Title Type
         token = strtok(NULL, tab);
         //printf("TOKEN: %s\n", token);
-        if(strcmp(token, "tvEpisode") == 0)
+        if(strcmp(token, "movie") != 0)
         {
             //printf("SKIPPED EPISODE\n");
             continue;

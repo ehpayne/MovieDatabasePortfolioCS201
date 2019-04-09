@@ -71,7 +71,7 @@ void newUserMenu()
     printf("\n\nUSER CREATED\n\n");
     system("clear");
     printf("\n\nWELCOME NEW USER!\n\n");
-    printf("\n\n\nGETTING SET UP (this could take about 15-20 seconds\n\n\n");
+    printf("\n\n\nGETTING SET UP (this could take about 15-20 seconds)\n\n\n");
     readTitleBasicsFile();
     initialMenuNewUser(username_input);
 }
@@ -458,6 +458,7 @@ void movieTitleSearchMenu(char *username, char *catalogName, int searchType)
     else
     {
         printf("\n\nMovie found!\n");
+        printInfo(username, 0);
         movieInfoMenu(movie);
         if(searchType == 0)
         {

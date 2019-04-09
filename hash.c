@@ -17,7 +17,7 @@
 HTable *newHashTableTBasic()
 {
     HTable *ht = malloc(sizeof(HTable));
-    ht->size = 18000000; //18 million
+    ht->size = 1000000; //1 million
     
     ht->table = malloc(ht->size * sizeof(TBasic));
     
@@ -34,7 +34,7 @@ unsigned int hashFunction(char *str)
         {
             break;
         }
-        index = ((73 * index) * str[i]) % 18000000;
+        index = ((73 * index) * str[i]) % tBasicHashTable->size;
         //printf("index: %d\n", index);
     }
     //printf("leaving hash function\n");
@@ -51,7 +51,7 @@ unsigned int doubleHashFunction(unsigned int oldIndex, char *str)
         {
             break;
         }
-        newIndex = ((newIndex * oldIndex) * str[i]) % 18000000;
+        newIndex = ((newIndex * oldIndex) * str[i]) % tBasicHashTable->size;
     }
     return newIndex;
 }
