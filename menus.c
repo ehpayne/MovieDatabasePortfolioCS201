@@ -458,7 +458,6 @@ void movieTitleSearchMenu(char *username, char *catalogName, int searchType)
     else
     {
         printf("\n\nMovie found!\n");
-        printInfo(username, 0);
         movieInfoMenu(movie);
         if(searchType == 0)
         {
