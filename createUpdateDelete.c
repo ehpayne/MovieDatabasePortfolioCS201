@@ -24,7 +24,7 @@ MovieCatalog *newCatalog(char *name)
 {
     MovieCatalog *catalog = malloc(sizeof(MovieCatalog));
     catalog->name = name;
-		catalog->next = NULL;
+    catalog->next = NULL;
     catalog->headMovie = NULL;
     
     return catalog;

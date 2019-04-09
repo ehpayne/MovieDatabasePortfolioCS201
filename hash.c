@@ -17,7 +17,7 @@
 HTable *newHashTableTBasic()
 {
     HTable *ht = malloc(sizeof(HTable));
-    ht->size = 1000000; //1 million
+    ht->size = 500000;
     
     ht->table = malloc(ht->size * sizeof(TBasic));
     
