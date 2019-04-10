@@ -530,7 +530,7 @@ char *strlwr(char *str)
 //appendFilename adds .log to a filename
 char *appendFilename(char *username)
 {
-    char *log = ".log"
+    char *log = ".log";
     char*filename = malloc(strlen(username) + strlen(log));
     strcpy(filename, username);
     strcat(filename, log);
